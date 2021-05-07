@@ -24,15 +24,17 @@ _start:
 	mov bl, 0x1			; int socket(int domain, int type, int protocol)	;
 
 						; *args: push in reverse order to stack
-	push ecx			; protocol (0)
+	push ecx			; protocol: IPPROTO_IP (0)
 	push 0x1			; type = SOCK_STREAM (1)
 	push 0x2			; domain = AF_INET
 	mov ecx, esp
 	int 0x80
 
 
-	mov edi, eax 		; store socket ptr to esi in edx
+	mov edi, eax 		; store socket ptr to edi in edx
 
+
+grep -Prizo "sql(.|\n){1,100}(127\.0\.0\.1|localhost).*\n.*\n" /etc /opt /var /home /root /srv --color=always 2>/dev/null | tr ':' '\n'
 
 
 	; bind socket

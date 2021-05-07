@@ -5,3 +5,30 @@ getSC () {
 }
 
 
+endian () {
+    #!/bin/bash
+
+    # check stdin
+    if [ -t 0 ]; then exit; fi
+
+    v=`cat /dev/stdin`
+    i=${#v}
+
+    while [ $i -gt 0 ]
+    do
+        i=$[$i-2]
+        echo -n ${v:$i:2}
+    done
+
+    echo
+}
+
+iptohex () {
+    python3 -c "print('push 0x' + ''.join([hex(int(x)+256)[3:] for x in '$1'.split('.')][::-1]) + '\t\t; IP = $1 (little endian)')"
+}
+
+numtohex() {
+    # requires endian()
+    tmp=$(printf "%.8x" $1 | endian | sed 's/0*$//g')
+    printf "push word 0x$tmp\t\t; num = '"$1"' (little endian)\n" $1
+}
