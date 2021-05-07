@@ -1,0 +1,5 @@
+http://shell-storm.org/shellcode/files/shellcode-847.php
+
+
+Compile bind.c
+gcc -m32 bind.c -o bind
