@@ -1,7 +1,9 @@
 
 # gets shellcode
 getSC () {
-    objdump -d "$1" |grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-10 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
+    # alternative, better?..
+    # objdump -d insertion_decode | grep -v "<" | grep -oP '[a-f0-9]{2} ' --color=never | tr -d '\n' | sed 's/ /\\x/g' | sed 's/\\x$//g' | sed 's/^/\\x/g' 
+    objdump -d "$1" |grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
 }
 
 
