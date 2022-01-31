@@ -25,11 +25,11 @@ endian () {
     echo
 }
 
-iptohex () {
+ipt2ex () {
     python3 -c "print('push 0x' + ''.join([hex(int(x)+256)[3:] for x in '$1'.split('.')][::-1]) + '\t\t; IP = $1 (little endian)')"
 }
 
-numtohex() {
+num2hex() {
     # requires endian()
     tmp=$(printf "%.8x" $1 | endian | sed 's/0*$//g')
     printf "push word 0x$tmp\t\t; num = '"$1"' (little endian)\n" $1
