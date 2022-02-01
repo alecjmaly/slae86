@@ -29,7 +29,6 @@ Create a Shell_Bind_TCP shellcode
 
 - Port number should be easily configurable
 
-
 ## Assignment 2
 Create a Shell_Reverse_TCP shellcode
 - Reverse connects to configured IP and Port 
