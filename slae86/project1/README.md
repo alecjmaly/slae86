@@ -12,28 +12,11 @@ Create a Shell_Bind_TCP shellcode
 
 The first task is to create shellcode that binds to a TCP port and executes a shell when connected to. I will be using `execve()` in my example code.
 
-My assembly code is documented throughout, however, I will step through each pieces in this blog post.
-
-## Important Information
-
-### x86 Calling Convention
-
-This is the calling convention for system calls (syscall()) in x86 linux. 
-
-| Register | Argument (info) |
-| ------ | ------ |
-| EAX | system call numer ( + return data ) |
-| EBX | 1st |
-| ECX | 2nd |
-| EDX | 3rd |
-| ESI | 4th |
-| EDI | 5th |
-| EBP | 6th |
-
+My assembly code is documented throughout, however, I will step through each piece in this blog post.
 
 ## Bind Shell Overview
 
-The general outline of C code is below and can be found [here](https://anubissec.github.io/Creating-a-TCP-Bind-Shell/#):
+The general outline of C code is below and more details can be read [here](https://anubissec.github.io/Creating-a-TCP-Bind-Shell/#):
 ```c
 // Create socket  
 host_sockid = socket(PF_INET, SOCK_STREAM, 0);  
@@ -71,9 +54,9 @@ Since this is not a C assignment, I will assume the reader understands the code 
 
 The first thing I do is zero out the registers that I plan to be using.
 
-I zero out ebx, then use that in a `mul` statement to zero out `eax` and `edx`, details on the mul can be found [here](https://www.aldeid.com/wiki/X86-assembly/Instructions/mul).
+I zero out ebx, then use that in a `mul` statement to zero out the `eax` and `edx` registers; details on the mul instruction can be found [here](https://www.aldeid.com/wiki/X86-assembly/Instructions/mul).
 
-While I didn't need to zero out edx, I used the `mul` trick here because I found it a neat, polymorphic way to zero out the eax register which I may use in the future.
+While I didn't need to zero out edx, I used the `mul` trick here because I found it a neat, polymorphic way to zero out the eax register which I may use in the future. 
 
 ```assembly
 ; Create socket
@@ -86,7 +69,7 @@ Next, I must call `socketcall()` as it is essentially a middleware function to e
 
 To execute `socketcall()`, I will execute a `syscall()` with the proper registers and stack values. 
 
-The [syscall()](https://man7.org/linux/man-pages/man2/syscall.2.html) function is actually wrapped in the [socketcall()](https://man7.org/linux/man-pages/man2/socketcall.2.html) function and looks like this:
+A [socketcall()](https://man7.org/linux/man-pages/man2/socketcall.2.html) function call is just a specific [syscall()](https://man7.org/linux/man-pages/man2/syscall.2.html) and it's function definition looks like this:
 ```c
 int syscall(SYS_socketcall, int call, unsigned long *args);
 ```
@@ -97,21 +80,20 @@ The first parameter (SYS_socketcall) is a refereence to the socketcall() enumera
 cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep socketcall
 ```
 
-This results in the ID of 102, or hex `0x66` and will be placed into register `eax`, based on the calling convention table above.
+This results in the ID of 102, or hex `0x66` and will be placed into register `eax`, based on the x86 calling convention.
 
-
-The second parameter is the argument to define the `socketcall()` function to use. In this case, it will be `0x1` for `SYS_SOCKET` which can be found by running:
+The second parameter is the argument to define the `socketcall()` function to use. In this case, it will be `0x1` for `SYS_SOCKET` (a.k.a. `socket()`) which can be found by running:
 
 ```bash
 cat /usr/include/linux/net.h | grep SYS_SOCKET
 ```
 
-Keeping in mind the x86 Calling Convention table above, I will load the socketcall() function enumerator index `0x66` into `eax` (`al` to remove nulls) and socket() function enumerator index `0x1` into `ebx` (`bl` to remove nulls). 
+Keeping in mind the x86 Calling Convention, I will load the socketcall() function enumerator index `0x66` into `eax` (`al` to remove nulls) and socket() function enumerator index `0x1` into `ebx` (`bl` to remove nulls). 
 
 The assembly looks like this:
 ```assembly
-mov al, 0x66  		; syscall: int socketcall(int call, unsigned long *args)	
-mov bl, 0x1			; int socket(int domain, int type, int protocol)  : SYS_SOCKET (0x01)	
+mov al, 0x66  		; socketcall()	
+mov bl, 0x1			; SYS_SOCKET : socket()	
 ```
 
 Next I must push the parameters of the [socket()](https://man7.org/linux/man-pages/man2/socket.2.html) call onto the stack in reverse order. 
@@ -121,19 +103,19 @@ The socket() function prototype looks like this
 int socket(int domain, int type, int protocol);
 ```
 
-I will use the domain parameter AF_INET which is `0x1`, found with this command:
+The (protocol) parameter IPPROTO_TCP which is `0x6`, found with this command:
 ```bash
-cat /usr/include/netinet/in.h | grep AF_INET
+cat /usr/include/netinet/in.h | grep IPPROTO_TCP
 ```
 
-The type parameter will be SOCK_STREAM which is `0x1`, found with this command:
+The (type) parameter will be SOCK_STREAM which is `0x1`, found with this command:
 ```bash
 cat /usr/include/i386-linux-gnu/bits/socket_type.h  | grep SOCK_STREAM
 ```
 
-The domain parameter will be AF_INET which is `0x2`, found with this command:
+The (domain) parameter will be AF_INET which is `0x2`, found with this command:
 ```bash
-cat /usr/include/i386-linux-gnu/bits/socket.h |grep AF_INET
+cat /usr/src/linux-headers-5.15.0-kali3-common/include/linux/socket.h | grep AF_INET
 ```
 
 The assembly looks like this:
@@ -143,8 +125,11 @@ The assembly looks like this:
 push 0x6			; protocol = IPPROTO_TCP (6) - 
 push 0x1			; type = SOCK_STREAM (1)
 push 0x2			; domain = AF_INET (2)
-mov ecx, esp
+mov ecx, esp        ; capture address of stack in ecx
 ```
+
+The parameters will be popped off the stack and the
+
 
 All that's left to do to call `socketcall()` by issuing the syscall() command `int 0x80`, after which the return value (in `eax`) will be a pointer to the newly created socket, which I move into `edi` for later use.
 
