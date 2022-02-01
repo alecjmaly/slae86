@@ -556,7 +556,7 @@ print(shellcode)
 
 And execute it with:
 ```bash
-python3 create_x86_bind_shell.py 56
+python3 create_x86_bind_shell.py 1234
 ```
 
 The output of the script is shellcode that can be entered into this template.c program:
@@ -589,7 +589,7 @@ And execute the resulting binary:
 
 Then, from another terminal, validate the connection by connecting with netcat and running some commands like `ls` `whoami` `id`, etc.:
 ```
-nc localhost 56
+nc localhost 1234
 ```
 
 
