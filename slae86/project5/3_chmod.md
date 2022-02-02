@@ -1,6 +1,4 @@
-
-
-# Analyze: Read File
+# Analyze: chmod
 
 # Create shellcode
 ```bash
@@ -53,8 +51,7 @@ Here I have cleaned and commented the code
 00000005  E80D000000        call 0x17           ; jmp label1
 
 
-0000000A  2F746D702F746D7066696C6500
-; (ascii) /tmp/tmpfile
+0000000A  2F746D702F746D7066696C6500            ; (ascii) /tmp/tmpfile
 
 lebel1:
 00000017  5B                pop ebx             ; ptr to: [string] /tmp/tmpfile
