@@ -1,4 +1,4 @@
-# SLAE x86 - Project 1
+# SLAE x86 - Project 1 [x]
 
 # Tasks
 
