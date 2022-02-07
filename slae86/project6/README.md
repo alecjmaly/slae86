@@ -1,4 +1,4 @@
-## Assignment 6
+## Assignment 6 [x]
 Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to beat pattern matching
 
 - The polymorphic versions cannot be larger 
