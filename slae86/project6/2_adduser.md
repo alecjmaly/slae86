@@ -329,4 +329,5 @@ The new shellcode
 ## Summary
 
 The old shellcode was 95 characters long (including nulls).
-The new shellcode is 101 bytes long and has no null bytes.
+
+My new shellcode is 101 bytes long and has no null bytes.

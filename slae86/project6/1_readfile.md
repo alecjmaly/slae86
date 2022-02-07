@@ -213,4 +213,5 @@ _start:
 ## Conclusion
 
 Metasploit payload was 73 bytes with nulls.
-My payload is 59 bytes without nulls.
+
+My new shellcode is 59 bytes without nulls.
