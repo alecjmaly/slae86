@@ -17,7 +17,7 @@ _start:
 _continue:
         pop     eax             ;This can point anywhere valid
 _next:
-        inc     eax     ;change to dec if you want to search backwards
+        inc     eax             ;change to dec if you want to search backwards
 _isEgg:
         cmp     dword [eax-8],egg
         jne     _next
