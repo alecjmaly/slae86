@@ -1,4 +1,4 @@
-; Filename: insertion_decode.nasm
+; Filename: custom_decode.nasm
 ; read /etc/passwd
 
 
@@ -10,7 +10,7 @@ _start:
 
 
 _decode_stub:
-	pop ebx 		; ptr to encoded_shellcode
+	pop ebx 				; ptr to encoded_shellcode
 	xor ecx, ecx
 	mov cl, 0x1
 	xor eax, eax
