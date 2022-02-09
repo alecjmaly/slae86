@@ -22,38 +22,38 @@ This is the calling convention for system calls (syscall()) in x86 linux and wil
 | EBP | 6th |
 
 
-## Assignment 1 
+## [Assignment 1](./project1)
 Create a Shell_Bind_TCP shellcode
 - Binds to a port  
 - Execs Shell on incoming connection 
 
 - Port number should be easily configurable
 
-## Assignment 2
+## [Assignment 2](./project2)
 Create a Shell_Reverse_TCP shellcode
 - Reverse connects to configured IP and Port 
 - Execs shell on successful connection 
 - IP and Port should be easily configurable
 
-## Assignment 3 
+## [Assignment 3](./project3)
 - Study about the Egg Hunter shellcode
 - Create a working demo of the Egghunter
 - Should be configurable for different payloads
 
-## Assignment 4 
+## [Assignment 4](./project4) 
 - Create a custom encoding scheme like the 
 “InserSon Encoder” we showed you 
 - PoC with using execve-stack as the shellcode
 to encode with your schema and execute 
 
-## Assignment 5
+## [Assignment 5](./project5)
 Take up at least 3 shellcode samples created 
 using Msfpayload for linux/x86  
 - Use GDB/Ndisasm/Libemu to dissect the 
 funcSonality of the shellcode
 - Present your analysis
 
-## Assignment 6
+## [Assignment 6](./project6)
 Take up 3 shellcodes from Shell-Storm and 
 create polymorphic versions of them to beat 
 paLern matching 
@@ -62,10 +62,9 @@ paLern matching
 - Bonus points for making it shorter in length 
 than original
 
-## Assignment 7
+## [Assignment 7](./project7)
 Create a custom crypter like the one shown in 
 the “crypters” video 
 - Free to use any exisSng encrypSon schema 
 - Can use any programming language
 
-[test](./project7)
