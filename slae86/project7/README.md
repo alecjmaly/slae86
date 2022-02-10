@@ -275,7 +275,6 @@ And that's it, my failed experimentation with getting a null free, self decrypti
 
 It's been fun.
 
-
 # Certification Requirements
 
 This blog post has been created for completing the requirements of the SecurityTube/PentesterAcademy [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) certification:
