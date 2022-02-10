@@ -4,7 +4,7 @@ Create a custom crypter like the one shown in the “crypters” video
 - Free to use any existing encryption schema 
 - Can use any programming language
 
-For this assignment, the task is to create a cryptor and decryptor for shellcode. I had some confusion when trying to understand this assignment. Mainly, when looking at previous student's work, the methodology seems to be encrypt using a program/script, then decrypt it with a seperate script. My thinking was that the shellcode should be able to decrypt itself. 
+For this assignment, the task is to create a cryptor and decryptor for shellcode. I had some confusion when trying to understand this assignment. Mainly, when looking at previous student's work, the methodology seems to be to encrypt using a program/script, then decrypt it with a seperate script. My thinking was that the shellcode should be able to decrypt itself. 
 
 I didn't fully get it working, however I thought I would speak to my process and document it.
 
