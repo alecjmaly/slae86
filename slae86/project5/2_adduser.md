@@ -62,7 +62,7 @@ echo -n "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x7
 0000005D  CD80              int 0x80
 ```
 
-Here I will dissect the assembly piece by piece, followed by a commented version of theh code in entirety.
+Here I will dissect the assembly piece by piece, followed by a commented version of the code in its entirety.
 
 
 ## Assembly review
