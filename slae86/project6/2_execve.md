@@ -1,4 +1,4 @@
-# Shellcode: Execve("/bin/sh")
+# Shellcode - Execve("/bin/sh")
 
 [http://shell-storm.org/shellcode/files/shellcode-863.php](http://shell-storm.org/shellcode/files/shellcode-863.php)
 
