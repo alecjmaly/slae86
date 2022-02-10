@@ -1,7 +1,5 @@
 # Project 2: TCP Reverse Shell
 
-## Task 
-
 Create a Shell_Reverse_TCP shellcode
 - Reverse connects to configured IP and Port 
 - Execs shell on successful connection 
@@ -41,7 +39,7 @@ struct sockaddr_in sa;
 
 Note that unlike the previous assignment, there is no need to call bind() or accept(). 
 
-# Assembly
+# Assembly Analysis
 
 To start, I will clear the registers I plan to use:
 
