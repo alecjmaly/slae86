@@ -17,7 +17,7 @@ echo -n "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x0
 
 ## Disassembled Assembly
 
-```x86asm
+```assembly
 00000000  EB36              jmp short 0x38
 00000002  B805000000        mov eax,0x5
 00000007  5B                pop ebx
@@ -53,7 +53,7 @@ Here I will dissect the assembly piece by piece, followed by a commented version
 
 The first command that is run jumps to the data section 
 
-```x86asm
+```assembly
 00000000  EB36              jmp short 0x38  ; jmp to jump1
 .
 .
@@ -69,7 +69,7 @@ jump1:
 
 It it will jump to `00000038` which calls back to the beginning of the shellcode. Importantly, this call places the address of the string "/etc/passwd" on the stack that would traditionally be used as a return address for a call, however, I will use it later to as the path of the file to read.
 
-```x86asm
+```assembly
 00000038  E8C5FFFFFF        call 0x2    ; jump to main
                                         ; address of 0x3D pushed to top of stack
 0000003D  2F6574632F706173737764        ; /etc/passwd
@@ -86,7 +86,7 @@ We then pop the address of our string off the stack into `ebx` to be used as the
 
 The syscall() is executed using `int 0x80` and the return value is moved into `ebx` which is a pointer to the opened file (in this case /etc/passwd).
 
-```x86asm
+```assembly
 00000002  B805000000        mov eax,0x5     ; open()
 00000007  5B                pop ebx         ; <addr> 0x3D (filename from stack) 
 00000008  31C9              xor ecx,ecx     ; clear ecx
@@ -110,7 +110,7 @@ Once the syscall is executed and the file data has been read, the number of byte
 
 The assembly for these operations is here:
 
-```x86asm
+```assembly
 0000000E  B803000000        mov eax,0x3     ; read() 
                                             ; man 2 read
                                             ; ssize_t read(int fd, void *buf, size_t count);
@@ -136,7 +136,7 @@ The final parameter `edx` was the return value from the read() command, and is t
 
 This assembly is taking the data read from /etc/passwd, which is currently stored on the stack, and outputs it to STDOUT (the console):
 
-```x86asm
+```assembly
 00000020  B804000000        mov eax,0x4     ; write()
 00000025  BB01000000        mov ebx,0x1     ; 1 = stdout (where to write output)
 0000002A  CD80              int 0x80        ; call write() 
@@ -155,7 +155,7 @@ This assembly is taking the data read from /etc/passwd, which is currently store
 
 Here I have cleaned and commented the code in entirety.
 
-```x86asm
+```assembly
 00000000  EB36              jmp short 0x38  ; jmp to jump1
 
 main:

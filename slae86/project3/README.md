@@ -32,7 +32,7 @@ Since I want the egg to be `c0d3`, I make the egg stored in register `esi` set t
 
 The final assembly is as follows:
 
-```x86asm
+```assembly
 global _start
 
 section .text

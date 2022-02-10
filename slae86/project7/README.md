@@ -181,7 +181,7 @@ After running my custom encoder, I recieve a very large shellcode without null b
 
 Actually, when just writing a basic .nasm file to execute the unencoded decrypt_and_run shellcode, it segfaults. However, a regular msfvenom payload that reads /etc/passwd without removing nulls does work.
 
-```x86asm
+```assembly
 global _start
 
 

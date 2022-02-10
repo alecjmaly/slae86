@@ -11,7 +11,7 @@ echo -n "\x31\xc9\xf7\xe1\xb0\x05\x51\x68\x73\x73\x77\x64\x68\x63\x2f\x70\x61\x6
 
 I have taken the disassembly and put it in a `.nasm` file format as  a starting point. I also marked some important values in comments.
 
-```x86asm
+```assembly
 global _start
 
 section .text
@@ -52,7 +52,7 @@ Since my goal was to reduce the number of bytes for extra credit, I did not chan
 
 First, I just changed the string that is pushed to the stack from `//etc/passwd` to `/etc//passwd`.
 
-```x86asm
+```assembly
 ; push dword 0x61702f63       ; "ap/c"
 ; push dword 0x74652f2f       ; "te//"
 push dword 0x61702f2f       ; "ap/c"
@@ -61,14 +61,14 @@ push dword 0x6374652f       ; "te//"
 
 I then removed the `xor` to clear `edx` as it should have been cleraed from the previous `xor ecx, ecx; mul ecx` instructions. This saves me two bytes from the original shellcode in total length.
 
-```x86asm
+```assembly
 ; xor edx,edx       
 ; edx is already cleared from `mul` instruction above 
 ```
 
 Instead of moving `0xfff` into `dx` and incrementing, I move `0x1001` into `dx` and decrement.
 
-```x86asm
+```assembly
 ; mov dx,0xfff
 ; inc edx
 mov dx, 0x1001
@@ -77,7 +77,7 @@ dec edx
 
 Here I change an `xor` with a `sub`. This may not work on all operating systems.
 
-```x86asm
+```assembly
 ; xor eax,eax
 sub eax, eax
 ```
@@ -85,14 +85,14 @@ sub eax, eax
 I then change an `xchg` to a `mov` instruction for the exit() syscall. Since I have removed 2 bytes from the shellcode up until now, this instruction adds one extra byte from the original and places me one byte less than the original for my final shellcode.
 
 
-```x86asm
+```assembly
 ; xchg eax,ebx        ; mov 0x1 into eax, exit()
 mov al, 0x1
 ```
 
 # Final Shellcode
 
-```x86asm
+```assembly
 global _start
 
 section .text

