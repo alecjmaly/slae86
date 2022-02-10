@@ -1,8 +1,4 @@
-# slae86
-
-Project files for SLAE x86 exercises
-
-## Introduction
+# x86 Assembly Language and Shellcoding on Linux (SLAE)
 
 This is my collection of projects to satisfy the requirements for the [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) course.
 
