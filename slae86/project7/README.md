@@ -63,7 +63,7 @@ gcc aes.c Decrypt_and_run.c -m32 -o decrypt_and_run
 ./decrypt_and_run
 ```
 
-So now I have a hardcoded key and IV that is embedded into the program. If this payload were distributed and a forensic team got their hands on it, they would be able to decrypt all payloads across any devices they found with this same Key/IV. To make this dynamic, I modified the cryptor.c program to randomly generate a new IV and Key with every execution. It also does the proper padding for the payload for CBC encryption, thus a new payload can be easily entered without worrying about having to pad the new shellcode with the proper number of `nop`'s in order to fill out the last encryption block.
+So now I have a hardcoded key and IV that is embedded into the program. If this payload were distributed and a forensic team got their hands on it, they would be able to statically decrypt all payloads across any devices they found with this same Key/IV. To make this a bit more dynamic and make the defenders life a little more difficult (maybe?), I modified the Cryptor.c program to randomly generate a new IV and Key with every execution. It also does the proper padding for the payload for CBC encryption, thus a new payload can be easily entered without worrying about having to pad the new shellcode with the proper number of `nop`'s in order to fill out the last encryption block.
 
 ```c
 #include <stdio.h>
@@ -175,7 +175,7 @@ uint8_t shellcode[] = { 0x76, 0xcc, 0x51, 0x49, 0xfa, 0xe7, 0xe1, 0x7d, 0xe0, 0x
 
 Now, with this dynamiclly generated IV/Key/shellcode, it is trivial to copy/paste into the decrypt_and_run.c source code above.
 
-So now that I have a working decrypt_and_run program, my goal was to dump it's shellcode and execute it usng a c program wrapper, the same methodology as previous shellcode payloads. However, when dumping this shellcode with `objdump`, it reuslts in a payload with null bytes `\x00`. That's ok! Because my custom encoder from project 4 encodes by xor'ing and ensuring no null bytes exist! 
+So now that I have a working decrypt_and_run program, my goal was to dump it's shellcode and execute it usng a c program wrapper, the same methodology as previous shellcode payloads. However, when dumping this shellcode with `objdump`, it reuslts in a payload with null bytes `\x00`. That's ok! Because my custom encoder from project 4 encodes by xor'ing and ensures no null bytes exist! 
 
 After running my custom encoder, I recieve a very large shellcode without null bytes. Unfortunately, it segfaults when trying to execute it. 
 
