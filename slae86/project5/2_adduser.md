@@ -129,7 +129,7 @@ Now it's time to actually write to the file that was just opened.
 
 The next instruction is a call to the 0x51 position. This will place a pointer to the next address of `0000002B` onto the stack. This is actually a string in hex form, however, the disassembler didn't know that when it was disassembling. Thus, instructions look twisted in the original disassembly. I will decode the hex value as a string and remove the instructions that aren't actually instrucitons. 
 
-I will then run this command to rebuild the remaining instructions.
+I will then run this command to rebuild the remaining instructions starting from the proper offset.
 
 ```bash
 echo -n "`python2 -c 'print "\x90"*81'`\x59\x8b\x51\xfc\x61\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u -p intel - | grep -v nop
