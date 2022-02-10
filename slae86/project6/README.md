@@ -10,8 +10,7 @@ than original
 
 # Shellstorm
 
-My polymorphic code for #1 and #2 are shorter in length than the original. 
-
+My polymorphic code for #1 and #2 are shorter in length than the original.<br>
 #3 is also shorter, however, the original is meant to be obfuscated and I removed that obfuscation, so it doesn't really count.
 
 1. [read_passwd](./1_read_passwd.md)
