@@ -204,7 +204,7 @@ _shellcode:
 
 This leads me to believe either the objdump command I'm using to dump shellcode isn't working, or perhaps it's because the shellcode doesn't have access to dependencies (module imports) of the ELF or some other reason?
 
-As an aside, this is my current version of dumping shellcode with objdump. It seems to work with every other payload, which makes me think it's the aes.c functions and increased dependency usage that may be causing the segfaults.
+As an aside, this is my current version of dumping shellcode with objdump. It seems to work with every ELF created from a .nasm file, so perhaps compiling with gcc is breaking things or maybe it's the aes.c functions and increased dependency usage that may be causing the segfaults?
 
 ```bash
 dump-shellcode () {
