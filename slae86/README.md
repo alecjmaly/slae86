@@ -80,11 +80,11 @@ I also analyzed a couple msfvenom payloads as well for fun:
 <br>
 <br>
 
-## Important Information
+# Important Information
 
 This information is relavent to all assignments.
 
-### x86 Calling Convention
+## x86 Calling Convention
 
 This is the calling convention for system calls (syscall()) in x86 linux and will be referenced throughout my assignments.
 
