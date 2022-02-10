@@ -158,7 +158,7 @@ running `dump-shellcode <compiled_linked_assembly_binary>` resulted in the full 
 
 Once the `test.c` file is in order, it can be compiled and ran using:
 ```bash
-gcc -fno-stack-protector -z execstack -m32 template.c -o test_decoder
+gcc -fno-stack-protector -z execstack -m32 test_decoder.c -o test_decoder
 ./test_decoder
 ``` 
 
