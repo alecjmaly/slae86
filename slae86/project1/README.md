@@ -58,7 +58,7 @@ I zero out ebx, then use that in a `mul` statement to zero out the `eax` and `ed
 
 While I didn't need to zero out edx, I used the `mul` trick here because I found it a neat, polymorphic way to zero out the eax register which I may use in the future. 
 
-```x86asm
+```assembly
 ; Create socket
 xor ebx, ebx       
 mul ebx             ; zero out eax, and edx
