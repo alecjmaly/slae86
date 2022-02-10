@@ -1,4 +1,4 @@
-# Project 2: TCP Reverse Shell [x]
+# Project 2: TCP Reverse Shell
 
 ## Task 
 
