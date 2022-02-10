@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include <stdlib.h>     // for rand() function
-#include <time.h>       // import time
+#include <stdlib.h>     // for rand()
+#include <time.h>       // for time()
 
 #define CBC 1
 #define CTR 1
@@ -25,7 +25,7 @@ static void encrypt(void)
     uint8_t key[32];
     uint8_t iv[16];
 
-    //Shellcode "execve-stack" + 2 NOPs
+    // Shellcode "execve-stack"
 	uint8_t unpadded_shellcode[] = { 
                             0x31, 0xc0, 0x50, 0x68, 0x62, 0x61, 0x73, 0x68,
                             0x68, 0x62, 0x69, 0x6e, 0x2f, 0x68, 0x2f, 0x2f,
@@ -38,6 +38,7 @@ static void encrypt(void)
     srand(time(0));
 
     // pad shellcode with nops: \x90
+    // for proper encryption block size
     int len = sizeof unpadded_shellcode;
     int padding = 8 - (len % 8);
     int new_len = len + padding;
