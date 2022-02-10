@@ -45,25 +45,32 @@ Student ID: SLAE-alecjmaly
 
 ## [Assignment 6](./project6)
 
-- Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to beat pattern matching
-- The polymorphic versions cannot be larger 150% of the exisSng shellcode
-- Bonus points for making it shorter in length than original
+Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to beat pattern matching
+
+- The polymorphic versions cannot be larger 
+150% of the exisSng shellcode
+- Bonus points for making it shorter in length 
+than original
 
 ### Shellstorm
 
+My polymorphic code for #1 and #2 are shorter in length than the original.<br>
+#3 is also shorter, however, the original is meant to be obfuscated and I removed that obfuscation, so it doesn't really count.
+
+1. [read_passwd](./1_read_passwd.md)
+2. [execve](./2_execve.md)
+3. [chmod_shadow](./3_chmod_shadow.md)
+
+
+Additionally, I also analyzed some msfvenom payloads as well:
+
+### MSFVenom
+
 Both payloads #1 and #3 are shorter in length than the original.
 
-1. [read_passwd](https://github.com/alecmaly/slae/blob/master/slae86/project6/1_read_passwd.md)
-2. [execve](https://github.com/alecmaly/slae/blob/master/slae86/project6/2_execve.md)
-3. [chmod_shadow](https://github.com/alecmaly/slae/blob/master/slae86/project6/3_chmod_shadow.md)
-    
-### msfvenom
-
-I also analyzed a couple msfvenom payloads as well for fun:
-
-1. [read_file](https://github.com/alecmaly/slae/blob/master/slae86/project6/msfvenom-1_readfile.md)
-2. [adduser](https://github.com/alecmaly/slae/blob/master/slae86/project6/msfvenom-2_adduser.md)
-3. [chmod](https://github.com/alecmaly/slae/blob/master/slae86/project6/msfvenom-3_chmod.md)
+1. [msfvenom-readfile](./msfvenom-1_readfile.md)
+2. [msfvenom-adduser](./msfvenom-2_adduser.md)
+3. [msfvenom-chmod](./msfvenom-3_chmod.md)
 
 
 ## [Assignment 7](./project7)
