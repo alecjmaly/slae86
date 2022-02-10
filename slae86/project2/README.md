@@ -270,7 +270,7 @@ loop:
 	int 0x80			; execute execve
 ```
 
-# Python Wrapper (custom IP / Port)
+# Python Wrapper (custom IP / port)
 
 The next part of the assignment is to create a python script that will accept an ip address and port, then create the shellcode dynamically.
 
