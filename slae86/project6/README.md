@@ -17,11 +17,13 @@ than original
 Additionally, I also analyzed some msfvenom payloads as well:
 
 # MSFVenom
+
+Both payloads #1 and #3 are shorter in length than the original.
+
 - [msfvenom-1_readfile](./msfvenom-1_readfile.md)
 - [msfvenom-2_adduser](./msfvenom-2_adduser.md)
 - [msfvenom-3_chmod](./msfvenom-3_chmod.md)
 
-Both payloads #1 and #3 are shorter in length than the original.
 
 
 # Certification Requirements
