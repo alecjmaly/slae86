@@ -94,7 +94,7 @@ The syscall() is executed using `int 0x80` and the return value is moved into `e
 0000000C  89C3              mov ebx,eax     ; ebx now holds file descriptor
 ```
 
-New another syscall() will be prepared to execute [read()](https://man7.org/linux/man-pages/man2/read.2.html) which has a function definition of:
+Then another syscall() will be prepared to execute [read()](https://man7.org/linux/man-pages/man2/read.2.html) which has a function definition of:
 
 ```c
 ssize_t read(int fd, void *buf, size_t count);
