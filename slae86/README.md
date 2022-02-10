@@ -34,14 +34,15 @@ Student ID: SLAE-alecjmaly
 
 ## [Assignment 5](./project5)
 
-- Use GDB/Ndisasm/Libemu to dissect the funcSonality of the shellcode
+
+Take up at least 3 shellcode samples created using Msfpayload for linux/x86  
+- Use GDB/Ndisasm/Libemu to dissect the functionality of the shellcode
 - Present your analysis
 
-**Analysis**:
-
-1. [readfile](https://github.com/alecmaly/slae/blob/master/slae86/project5/1_readfile.md)
-2. [adduser](https://github.com/alecmaly/slae/blob/master/slae86/project5/2_adduser.md)
-3. [chmod](https://github.com/alecmaly/slae/blob/master/slae86/project5/3_chmod.md)
+Analysis is done in each markdown file in this folder:
+1. [readfile](./1_readfile.md)
+2. [addusers](./2_adduser.md)
+3. [chmod](./3_chmod.md)
 
 ## [Assignment 6](./project6)
 

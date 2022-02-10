@@ -10,7 +10,6 @@ Analysis is done in each markdown file in this folder:
 3. [chmod](./3_chmod.md)
 
 
-
 # Certification Requirements
 
 This blog post has been created for completing the requirements of the SecurityTube/PentesterAcademy [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) certification:
