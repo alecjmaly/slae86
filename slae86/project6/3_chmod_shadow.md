@@ -1,4 +1,4 @@
-# Overview
+# Shellcode - chmod 0777 /etc/passwd
 
 The original /etc/shadow permissions are set to 640, so this command will reset permissions back to the default on Ubuntu.
 ```bash
