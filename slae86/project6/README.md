@@ -20,9 +20,9 @@ Additionally, I also analyzed some msfvenom payloads as well:
 
 Both payloads #1 and #3 are shorter in length than the original.
 
-1. [msfvenom-1_readfile](./msfvenom-1_readfile.md)
-2. [msfvenom-2_adduser](./msfvenom-2_adduser.md)
-3. [msfvenom-3_chmod](./msfvenom-3_chmod.md)
+1. [msfvenom-readfile](./msfvenom-1_readfile.md)
+2. [msfvenom-adduser](./msfvenom-2_adduser.md)
+3. [msfvenom-chmod](./msfvenom-3_chmod.md)
 
 
 
