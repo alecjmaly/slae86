@@ -1,4 +1,4 @@
-## Assignment 6 [x]
+## Assignment 6
 Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to beat pattern matching
 
 - The polymorphic versions cannot be larger 
@@ -7,7 +7,6 @@ Take up 3 shellcodes from Shell-Storm and create polymorphic versions of them to
 than original
 
 
-Both payloads #1 and #3 are shorter in length than the original.
 
 # Shellstorm
 - [1_read_passwd](./1_read_passwd.md)
@@ -22,6 +21,7 @@ Additionally, I also analyzed some msfvenom payloads as well:
 - [msfvenom-2_adduser](./msfvenom-2_adduser.md)
 - [msfvenom-3_chmod](./msfvenom-3_chmod.md)
 
+Both payloads #1 and #3 are shorter in length than the original.
 
 
 # Certification Requirements
