@@ -7,7 +7,7 @@ Create a Shell_Reverse_TCP shellcode
 - Execs shell on successful connection 
 - IP and Port should be easily configurable
 
-This assignment is similar to the previous of creating a bind shell, however, instead of opening a listening port it will connect back to the IP and port of our choosing upon execution of the shellcode. In Assignment 1 I went into great detail about how I get the syscall enumerator indices. In this assignment I will not go into such depth but rather focus on the shellcode itself.  
+This assignment is similar to the previous of creating a bind shell, however, instead of opening a listening port it will connect back to the IP and port of our choosing upon execution of the shellcode. In Assignment 1 I went into great detail about how I get the syscall enumerator indices. In this assignment I will not go into such depth as the process is similar and many of the values remain unchanged.  
 
 Since this shellcode will be executed on linux x86 which is a little endian architecture, we will convert all hex values (e.g. IP / port) into little endian when pushing them onto the stack.
 
