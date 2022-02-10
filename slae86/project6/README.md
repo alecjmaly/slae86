@@ -10,14 +10,14 @@ than original
 Both payloads #1 and #3 are shorter in length than the original.
 
 # Shellstorm
-[1_read_passwd](./1_read_passwd.md)
-[2_execve](./2_execve.md)
-[3_chmod_shadow](./3_chmod_shadow.md)
+- [1_read_passwd](./1_read_passwd.md)
+- [2_execve](./2_execve.md)
+- [3_chmod_shadow](./3_chmod_shadow.md)
 
 
 Additionally, I also analyzed some msfvenom payloads as well:
 
 # MSFVenom
-[msfvenom-1_readfile](./msfvenom-1_readfile.md)
-[msfvenom-2_adduser](./msfvenom-2_adduser.md)
-[msfvenom-3_chmod](./msfvenom-3_chmod.md)
+- [msfvenom-1_readfile](./msfvenom-1_readfile.md)
+- [msfvenom-2_adduser](./msfvenom-2_adduser.md)
+- [msfvenom-3_chmod](./msfvenom-3_chmod.md)
