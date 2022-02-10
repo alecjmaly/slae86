@@ -25,16 +25,13 @@ static void decrypt(void)
     AES_init_ctx_iv(&ctx, key, iv);
     AES_CBC_decrypt_buffer(&ctx, shellcode, sizeof(shellcode));
 
-    printf("Decrypted Shellcode:");
-    printf("\n");
+    printf("Decrypted Shellcode:\n");
 
     for (i = 0; i < sizeof shellcode; i ++)
     {
         printf("\\x%02x", shellcode[i]);
     }
-
     printf("\n");
-
 }
 
 int main(void)
