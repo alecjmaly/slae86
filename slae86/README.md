@@ -34,7 +34,7 @@ Student ID: SLAE-alecjmaly
 
 ## [Assignment 5](./project5)
 
-- Use GDB/Ndisasm/Libemu to dissect the funcSonality of the shellcode
+- Use GDB/Ndisasm/Libemu to dissect the functionality of the shellcode
 - Present your analysis
 
 **Analysis**:
