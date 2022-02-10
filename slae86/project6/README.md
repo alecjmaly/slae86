@@ -21,3 +21,13 @@ Additionally, I also analyzed some msfvenom payloads as well:
 - [msfvenom-1_readfile](./msfvenom-1_readfile.md)
 - [msfvenom-2_adduser](./msfvenom-2_adduser.md)
 - [msfvenom-3_chmod](./msfvenom-3_chmod.md)
+
+
+
+# Certification Requirements
+
+This blog post has been created for completing the requirements of the SecurityTube/PentesterAcademy [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) certification:
+
+Student ID: SLAE-alecjmaly
+
+

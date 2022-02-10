@@ -274,3 +274,10 @@ It outputs the original shellcode (padded with nops: \x90):
 And that's it, my failed experimentation with getting a null free, self decrypting shellcode and some updates that enable dynamic IV/Key generation for each run of the Cryptor program.
 
 It's been fun.
+
+
+# Certification Requirements
+
+This blog post has been created for completing the requirements of the SecurityTube/PentesterAcademy [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) certification:
+
+Student ID: SLAE-alecjmaly

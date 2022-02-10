@@ -1,6 +1,8 @@
 # x86 Assembly Language and Shellcoding on Linux (SLAE)
 
-This is my collection of projects to satisfy the requirements for the [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) course.
+This blog post has been created for completing the requirements of the SecurityTube/PentesterAcademy [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) certification:
+
+Student ID: SLAE-alecjmaly
 
 
 # Assignments
