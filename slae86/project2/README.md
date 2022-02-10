@@ -110,7 +110,7 @@ Pushing data to the stack in reverse order.
 
 sin_zero can be ignored.
 
-sin_addr = the hex value of an ip address. This can be done in a sript or online at [this website](https://www.browserling.com/tools/ip-to-hex). In this case, the reverse shell will connect to 10.0.2.15, or 0x0a00020f in hex (little endian). 
+sin_addr = the hex value of an ip address. This can be done in a sript or online at [this website](https://www.browserling.com/tools/ip-to-hex). In this case, the reverse shell will connect to 10.0.2.15 (my local ip address displayed from `ifconfig`), or 0x0a00020f in hex (little endian). 
 
 sin_port = hex value of the port in little endian. 
 
