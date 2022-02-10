@@ -2,30 +2,9 @@
 
 Project files for SLAE x86 exercises
 
-
-## Important Information
-
-This information is relavent to all assignments.
-
-### x86 Calling Convention
-
-This is the calling convention for system calls (syscall()) in x86 linux and will be referenced throughout my assignments.
-
-| Register | Argument (info) |
-| ------ | ------ |
-| EAX | system call numer ( + return data ) |
-| EBX | 1st |
-| ECX | 2nd |
-| EDX | 3rd |
-| ESI | 4th |
-| EDI | 5th |
-| EBP | 6th |
-
-
 ## Introduction
 
 This is my collection of projects to satisfy the requirements for the [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) course.
-
 
 
 # Assignments
@@ -94,4 +73,26 @@ I also analyzed a couple msfvenom payloads as well for fun:
 - Create a custom crypter like the one shown in the “crypters” video
 - Free to use any existing encrypSon schema
 - Can use any programming language
+
+
+
+
+
+## Important Information
+
+This information is relavent to all assignments.
+
+### x86 Calling Convention
+
+This is the calling convention for system calls (syscall()) in x86 linux and will be referenced throughout my assignments.
+
+| Register | Argument (info) |
+| ------ | ------ |
+| EAX | system call numer ( + return data ) |
+| EBX | 1st |
+| ECX | 2nd |
+| EDX | 3rd |
+| ESI | 4th |
+| EDI | 5th |
+| EBP | 6th |
 
