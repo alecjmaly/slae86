@@ -46,7 +46,7 @@ echo -n "\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8\x03\x00\x0
 00000048  00                db 0x00
 ```
 
-Here I will dissect the assembly piece by piece, followed by a commented version of theh code in entirety.
+Here I will dissect the assembly piece by piece, followed by a commented version of the code in its entirety.
 
 
 ## Disassembly Review
