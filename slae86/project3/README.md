@@ -13,7 +13,7 @@ A really good blog post by a previous student [H0mbre](https://h0mbre.github.io/
 
 In short, an egg hunter is a two stage payload when you have limited buffer space for your overflow. If you can insert the main payload somewhere in memory, you can use a small egg hunter to search for that main payload and execute it. For more specific details, please refer to the links above. 
 
-For this assignment I will walk through the `access()` egg hunter methodology. I will use the egg `"cd0e" or 0x65643063 (little endian)` as it seems [epi](https://epi052.gitlab.io/notes-to-self/blog/2020-05-18-osce-exam-practice-part-three/#mona-py-egg) has found it to work better than some other eggs such as `"W00T"` and it's a bit funner than random characters.
+For this assignment I will walk through the `access()` egg hunter methodology. I will use the egg `"c0de" or 0x65643063 (little endian)` as it seems [epi](https://epi052.gitlab.io/notes-to-self/blog/2020-05-18-osce-exam-practice-part-three/#mona-py-egg) has found it to work better than some other eggs such as `"W00T"` and it's a bit funner than random characters.
 
 
 # Egg Hunter Assembly 
