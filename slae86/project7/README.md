@@ -202,6 +202,8 @@ _shellcode:
 
 ```
 
+I even tried taking the `aes.c` file that had the encryption functions and created a trimmed down version that only has the required dependencies for decryption into a `aes_trimmed_CBC_decrypt.c` file in an attempt to make my final binary/payload smaller. This didn't help, although it did reduce the size. I left the `aes.h` file alone as it is already pretty small.
+
 I have a few theories on why this doesn't work. Perhaps the `objdump` command I'm using to dump shellcode isn't capturing all bytes. Or perhaps it's because the shellcode doesn't have access to dependencies (module imports) of the ELF. I'm also thinking a likely cause is that using `gcc` on the .c files is not building the ELF in a similar way that compiling and linking assembly does - as I cannot get even a basic shellcode dumped from a gcc compiled ELF to execute. 
 
 As an aside, this is my current version of dumping shellcode with objdump. It seems to work with every ELF created from a .nasm file, so perhaps compiling with gcc is breaking things or maybe it's the aes.c functions and increased dependency usage that may be causing the segfaults?
