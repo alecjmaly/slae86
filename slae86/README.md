@@ -57,9 +57,9 @@ than original
 My polymorphic code for #1 and #2 are shorter in length than the original.<br>
 #3 is also shorter, however, the original is meant to be obfuscated and I removed that obfuscation, so it doesn't really count.
 
-1. [read_passwd](./1_read_passwd.md)
-2. [execve](./2_execve.md)
-3. [chmod_shadow](./3_chmod_shadow.md)
+1. [read_passwd](./project6/1_read_passwd.md)
+2. [execve](./project6/2_execve.md)
+3. [chmod_shadow](./project6/3_chmod_shadow.md)
 
 
 Additionally, I also analyzed some msfvenom payloads as well:
@@ -68,9 +68,9 @@ Additionally, I also analyzed some msfvenom payloads as well:
 
 Both payloads #1 and #3 are shorter in length than the original.
 
-1. [msfvenom-readfile](./msfvenom-1_readfile.md)
-2. [msfvenom-adduser](./msfvenom-2_adduser.md)
-3. [msfvenom-chmod](./msfvenom-3_chmod.md)
+1. [msfvenom-readfile](./project6/msfvenom-1_readfile.md)
+2. [msfvenom-adduser](./project6/msfvenom-2_adduser.md)
+3. [msfvenom-chmod](./project6/msfvenom-3_chmod.md)
 
 
 ## [Assignment 7](./project7)
