@@ -17,11 +17,9 @@ My polymorphic code for #1 and #2 are shorter in length than the original.<br>
 2. [execve](./2_execve.md)
 3. [chmod_shadow](./3_chmod_shadow.md)
 
-
-Additionally, I also analyzed some msfvenom payloads as well:
-
 # MSFVenom
 
+Additionally, I also analyzed some msfvenom payloads as well.
 Both payloads #1 and #3 are shorter in length than the original.
 
 1. [msfvenom-readfile](./msfvenom-1_readfile.md)
