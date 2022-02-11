@@ -112,4 +112,4 @@ gcc -fno-stack-protector -z execstack -m32 egg_hunter_test.c -o egg_hunter
 
 This blog post has been created for completing the requirements of the SecurityTube/PentesterAcademy [x86 Assembly Language and Shellcoding on Linux (SLAE)](https://www.pentesteracademy.com/course?id=3) certification:
 
-Student ID: SLAE-alecjmaly
+Student ID: PA-29350
