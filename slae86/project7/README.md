@@ -202,7 +202,7 @@ _shellcode:
 
 ```
 
-This leads me to believe either the objdump command I'm using to dump shellcode isn't working, or perhaps it's because the shellcode doesn't have access to dependencies (module imports) of the ELF or some other reason?
+I have a few theories on why this doesn't work. Perhaps the `objdump` command I'm using to dump shellcode isn't capturing all bytes. Or perhaps it's because the shellcode doesn't have access to dependencies (module imports) of the ELF. I'm also thinking a likely cause is that using `gcc` on the .c files is not building the ELF in a similar way that compiling and linking assembly does - as I cannot get even a basic shellcode dumped from a gcc compiled ELF to execute. 
 
 As an aside, this is my current version of dumping shellcode with objdump. It seems to work with every ELF created from a .nasm file, so perhaps compiling with gcc is breaking things or maybe it's the aes.c functions and increased dependency usage that may be causing the segfaults?
 
@@ -214,7 +214,7 @@ dump-shellcode () {
 
 Since this was mainly just experimenting and not required for this assignment, I will continue without figuing this out and table this for an exercise for myself later. 
 
-So, in addition to the dynamic cryptor.c program above, a basic Decryptor.c program that outputs the original shellcode can be created. Just be sure to copy/paste the output from the Cryptor.c to replace the `key` `iv` and `shellcode` parameters, as each run of Cryptor.c will result in new values for each, even for the same orignial shellcode payload:
+So, in addition to the dynamic Cryptor.c program above, a basic Decryptor.c program that outputs the original shellcode can be created. Just be sure to copy/paste the output from the Cryptor.c to replace the `key` `iv` and `shellcode` parameters, as each run of Cryptor.c will result in new values for each, even for the same orignial shellcode payload:
 
 ```c
 #include <stdio.h>
