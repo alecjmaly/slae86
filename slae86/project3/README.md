@@ -65,6 +65,7 @@ address_check:		    ; here we're going to design a function to check the next 8 
     jmp edx			    ; we found it twice! go to edx (where our egg is) +8 and execute the code there! 
 ```
 
+Essentially this shellcode will start looking at memory from address 0x0. It will then check if it can read from that page of memory using the access() function. If it fails, it will skip to the next page by jumping to the page_forward tag and executing `or dx, 0xfff`. Once it jumps to the next page, it will again check to see if it can read the page memory there. Eventually, when a page of memory is found that can be read, the shellcode will step through each address in that page and look for the egg+egg marker. Once the marker is found, it will jump past to egg to the shellcode and start executing the primary shellcode we would like to execute.
 
 Shellcode (Length: 41 bytes):
 
