@@ -64,7 +64,7 @@ This script accepts the original shellcode in the `payload` variable. It then it
 
 The new shellcode will be in the form of `<random_byte><old_byte ^ random_byte>`. 
 
-If either of these bytes are a `0x00` or `0xff`, a new random byte is generated and the old shellcode is xor'd with the new random byte. This is to avoid `0x00` in the new payload and `0xff` which will be appended as the exit condition during decoding. Additionally, a `bad_bytes` array is used, thus it is trivial to add additional bad characters you would like to avoid in the final shellcode (note that 0xff is required as it is the exit condition).
+If either of these bytes are a `0x00` or `0xff`, a new random byte is generated and the old shellcode is xor'd with the new random byte. This is to avoid `0x00` in the new payload and `0xff` which will be appended as the exit condition during decoding. Additionally, a `bad_bytes` array is used, thus it is trivial to add additional bad characters you would like to avoid in the final shellcode (note that 0xff is required as it is the exit condition). I personally think this is super cool and useful! 
 
 # Decoder: Assembly
 
